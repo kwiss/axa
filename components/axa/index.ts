@@ -15,4 +15,14 @@ export { YesNoButtons } from "./YesNoButtons";
 export { ReinsuranceBlock } from "./ReinsuranceBlock";
 export { DestinationPicker } from "./DestinationPicker";
 export { DateRangePicker } from "./DateRangePicker";
+export { HelpDrawer } from "./HelpDrawer";
+
+// Plans page components
+export { TripSummaryBar } from "./TripSummaryBar";
+export { PlanCarouselCard } from "./PlanCarouselCard";
+export { PlanCarousel } from "./PlanCarousel";
+export { CoverageItem } from "./CoverageItem";
+export { CoverageList } from "./CoverageList";
+export { CoverageDetailDrawer } from "./CoverageDetailDrawer";
+export { HelpModal } from "./HelpModal";
 

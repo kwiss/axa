@@ -47,28 +47,36 @@ alwaysApply: true
 
 ### Hero Section
 ```tsx
-<div className="relative h-[457px] flex flex-col justify-center px-[30px] py-10">
+<div className="relative h-[457px] flex flex-col justify-center px-[30px] py-10 gap-11">
   {/* Background */}
   <div className="absolute inset-0">
-    <img src="..." className="absolute inset-0 size-full object-cover" />
+    <img src="/hero.jpg" className="absolute inset-0 size-full object-cover" />
     <div className="absolute inset-0 bg-black/50" />
   </div>
   
-  {/* Content */}
-  <div className="relative z-10">
-    <h1 className="text-[32px] font-bold leading-8 text-white italic">
+  {/* Content - Publico Headline, PAS italic */}
+  <div className="relative z-10 flex flex-col gap-6 w-[328px]">
+    <h1 className="font-headline text-[32px] font-bold leading-8 text-white">
       Wherever you go,<br/>we're already there.
     </h1>
-    <p className="text-xl leading-7 text-white mt-6">
+    <p className="text-xl leading-7 text-white">
       Where your journey begins,<br/>our protection follows.
     </p>
   </div>
   
-  {/* Stats */}
-  <div className="relative z-10 flex flex-col gap-4 mt-11">
+  {/* Stats - Publico Headline pour les chiffres */}
+  <div className="relative z-10 flex flex-col gap-4">
     <p className="text-white">
-      <span className="text-2xl font-extrabold">60</span>
+      <span className="font-headline text-2xl font-extrabold">60</span>
       <span className="text-base font-semibold ml-1">Years of expertise</span>
+    </p>
+    <p className="text-white">
+      <span className="font-headline text-2xl font-extrabold">130</span>
+      <span className="text-base font-semibold ml-1">Countries worldwide</span>
+    </p>
+    <p className="text-white">
+      <span className="font-headline text-xl font-extrabold">24/7</span>
+      <span className="text-base font-semibold ml-1">Assistance</span>
     </p>
   </div>
 </div>
@@ -115,6 +123,25 @@ alwaysApply: true
   </div>
   <p className="text-xs text-[#111B1D] leading-4">Rated 4.6/5 by thousands of travellers</p>
 </div>
+```
+
+### Trip Selector Input (Home)
+```tsx
+{/* Input avec icône séparée - container carré, pas de fond bleu */}
+<button className="h-12 rounded border border-[#757575] bg-white flex items-center overflow-hidden hover:border-[#1F1F9C] transition-colors">
+  {/* Icon container - CARRÉ (size-12), pas de background */}
+  <div className="size-12 flex items-center justify-center border-r border-[#757575]">
+    {/* Globe/Location Icon SVG */}
+  </div>
+  
+  {/* Text */}
+  <span className="flex-1 px-4 text-base text-left leading-6 text-[#757575]">
+    Select your type of trip
+  </span>
+  
+  {/* Chevron */}
+  <ChevronRight className="size-6 text-[#343C3D] mr-4" />
+</button>
 ```
 
 ---
@@ -164,15 +191,18 @@ alwaysApply: true
 </button>
 ```
 
-### Outline Buttons (Form)
+### Outline Buttons (Form) - avec Focus State
 ```tsx
+// Base classes (toujours présentes)
+const baseClasses = "w-full h-12 px-6 rounded-lg border text-sm font-semibold uppercase tracking-[1px] transition-all flex items-center justify-center outline-none focus-visible:shadow-[0px_0px_0px_3px_rgba(0,0,143,0.5)]";
+
 // Unselected
-<button className="w-full h-12 px-6 py-4 border border-[#1F1F9C] bg-transparent rounded text-sm font-semibold uppercase tracking-[1px] text-[#343C3D]">
+<button className={cn(baseClasses, "border-[#343C3D] bg-white text-[#343C3D] hover:bg-[#F0F0F0]")}>
   A SINGLE TRIP
 </button>
 
-// Selected
-<button className="w-full h-12 px-6 py-4 border border-[#1F1F9C] bg-[rgba(142,187,255,0.2)] rounded text-sm font-semibold uppercase tracking-[1px] text-[#1F1F9C]">
+// Selected (PAS de shadow - shadow = focus uniquement)
+<button className={cn(baseClasses, "border-[#1F1F9C] bg-[#E8F1FF] text-[#00008F]")}>
   A MULTI-TRIP
 </button>
 ```
@@ -189,10 +219,11 @@ alwaysApply: true
 </div>
 ```
 
-### Input with Suffix
+### Input with Suffix - avec Focus State
 ```tsx
-<div className="flex h-12 border border-[#757575] rounded overflow-hidden">
-  <input className="flex-1 px-4 py-3 text-base text-[#111B1D] bg-white outline-none placeholder:text-[#757575]" />
+{/* Le container a le focus state, pas l'input */}
+<div className="flex h-12 border border-[#757575] rounded-lg overflow-hidden transition-all focus-within:border-[#1F1F9C] focus-within:shadow-[0px_0px_0px_3px_rgba(0,0,143,0.5)]">
+  <input className="flex-1 px-4 py-3 text-base text-[#111B1D] bg-white outline-none placeholder:text-[#757575] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
   <div className="px-4 flex items-center bg-[rgba(142,187,255,0.2)] border-l border-[#757575]">
     <span className="text-base font-semibold text-[#1F1F9C]">€</span>
   </div>
@@ -209,10 +240,15 @@ alwaysApply: true
 </div>
 ```
 
-### Info Tooltip
+### Info Tooltip (avec vraie photo)
 ```tsx
+// Utiliser une vraie photo humaine, pas un placeholder
+const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&h=60&fit=crop&crop=face";
+
 <div className="bg-[#D9EAEC] p-4 rounded-md flex gap-2.5">
-  <div className="size-[30px] rounded-full bg-[#94B5E8] flex-shrink-0" />
+  <div className="size-[30px] rounded-full overflow-hidden flex-shrink-0">
+    <img src={DEFAULT_AVATAR} alt="" className="size-full object-cover" />
+  </div>
   <p className="text-sm leading-5 text-[#014750]">
     If your trip is cancelled for a covered reason...
   </p>
@@ -268,4 +304,193 @@ alwaysApply: true
   </div>
   <StickyFooter />
 </div>
+```
+
+---
+
+## DateRangePicker - Sélection Continue
+
+### Structure du calendrier
+Le fond bleu entre les dates doit être **CONTINU** (pas de gaps blancs).
+
+```tsx
+{/* Rendre par semaine pour avoir un fond continu */}
+{weeks.map((week, weekIndex) => (
+  <div key={weekIndex} className="relative flex">
+    {/* Range background layer - bande bleue continue */}
+    {hasRangeInWeek && (
+      <div
+        className="absolute inset-y-0 bg-[rgba(142,187,255,0.2)]"
+        style={{
+          left: hasStart ? `${startIndex * 48}px` : 0,
+          right: hasEnd ? `${(6 - endIndex) * 48}px` : 0,
+          borderTopLeftRadius: hasStart ? '4px' : 0,
+          borderBottomLeftRadius: hasStart ? '4px' : 0,
+          borderTopRightRadius: hasEnd ? '4px' : 0,
+          borderBottomRightRadius: hasEnd ? '4px' : 0,
+        }}
+      />
+    )}
+    
+    {/* Day cells */}
+    {week.map((day) => (
+      <button className={cn(
+        "w-[38px] h-[39px] flex items-center justify-center relative z-10 mx-[5px]",
+        isStart && "bg-[#1F1F9C] text-white rounded-l",
+        isEnd && "bg-[#1F1F9C] text-white rounded-r",
+        isToday && !isStart && !isEnd && "border border-[#5C5CB7] rounded text-[#5C5CB7]"
+      )}>
+        {day.date.getDate()}
+      </button>
+    ))}
+  </div>
+))}
+```
+
+### États des dates
+- **Start date**: `bg-[#1F1F9C] text-white rounded-l` (arrondi gauche)
+- **End date**: `bg-[#1F1F9C] text-white rounded-r` (arrondi droit)
+- **In range**: Fond continu `bg-[rgba(142,187,255,0.2)]` sur la ligne
+- **Today**: `border border-[#5C5CB7] rounded text-[#5C5CB7]`
+- **Other month**: `text-[#CCCCCC]`
+
+---
+
+## Progressive Form Behavior
+
+### Debounce pour Number Inputs
+Les sections suivantes apparaissent **1 seconde après** avoir arrêté de taper dans un input number.
+
+```tsx
+// Debounce effect pour les inputs numériques
+useEffect(() => {
+  if (value !== null && value > 0) {
+    const timer = setTimeout(() => {
+      setValidated(true); // Affiche la section suivante
+    }, 1000);
+    return () => clearTimeout(timer);
+  }
+}, [value]);
+```
+
+### Buttons = Immédiat
+Les boutons (Yes/No, Single/Multi) déclenchent l'affichage de la section suivante **immédiatement** au clic.
+
+---
+
+## Help Drawer / Modal Components
+
+### Photos d'équipe (Avatars)
+Toujours utiliser de **vraies photos humaines**, jamais de placeholders avec gradients ou lettres.
+
+```tsx
+// URLs Unsplash pour les avatars d'équipe
+const avatars = [
+  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+];
+```
+
+### Avatars superposés (Team)
+```tsx
+<div className="flex items-center -space-x-3">
+  {avatars.map((avatar, index) => (
+    <div
+      key={index}
+      className={cn(
+        "size-[58px] rounded-full border-2 border-white overflow-hidden",
+        index === 1 && "z-10" // Avatar du milieu au-dessus
+      )}
+    >
+      <img
+        src={avatar}
+        alt={`Team member ${index + 1}`}
+        className="size-full object-cover"
+      />
+    </div>
+  ))}
+</div>
+```
+
+### HelpDrawer (Bottom Sheet)
+Utiliser le composant Sheet de Shadcn avec `side="bottom"`.
+
+```tsx
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+
+<Sheet open={open} onOpenChange={onOpenChange}>
+  <SheetContent
+    side="bottom"
+    className="bg-white rounded-t-2xl px-0 pt-0 pb-6 max-h-[90vh] overflow-y-auto [&>button]:hidden"
+  >
+    {/* Close button custom */}
+    <div className="flex justify-end px-6 pt-4">
+      <button onClick={() => onOpenChange(false)}>
+        <X className="size-6 text-[#343C3D]" />
+      </button>
+    </div>
+    
+    {/* Content */}
+    <div className="px-6">
+      <SheetTitle>Got a question?</SheetTitle>
+      {/* ... */}
+    </div>
+  </SheetContent>
+</Sheet>
+```
+
+### Boutons de contact (avec icônes 16px)
+⚠️ Les icônes dans les boutons doivent faire **16px** (`size-4`), pas 20px ou 24px.
+
+```tsx
+// Utiliser le composant Button avec les variants appropriés
+import { Button } from "@/components/ui/button";
+import { Phone, MessageCircle } from "lucide-react";
+
+{/* Call - Primary */}
+<Button asChild fullWidth>
+  <a href="tel:0890899900">
+    <Phone className="size-4" />
+    Call 0890 899 900
+  </a>
+</Button>
+
+{/* WhatsApp - Success (vert) */}
+<Button variant="success" asChild fullWidth>
+  <a href="https://wa.me/33890899900" target="_blank" rel="noopener noreferrer">
+    {/* WhatsApp icon SVG */}
+    <svg className="size-4" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    What's App
+  </a>
+</Button>
+
+{/* Chat - Outline */}
+<Button variant="outline" fullWidth>
+  <MessageCircle className="size-4" />
+  Chat now
+</Button>
+```
+
+### Button Variants disponibles
+```tsx
+// Primary (bleu AXA) - CTA principal
+<Button>Get a quote</Button>
+<Button variant="default">Get a quote</Button>
+
+// Outline - Secondaire
+<Button variant="outline">Read our FAQ</Button>
+
+// Success (vert) - WhatsApp, actions positives
+<Button variant="success">What's App</Button>
+
+// Destructive (rouge) - Actions dangereuses
+<Button variant="destructive">Cancel</Button>
+
+// Props utiles
+<Button fullWidth>Full width button</Button>
+<Button asChild><a href="...">Link as button</a></Button>
 ```

@@ -10,45 +10,47 @@ alwaysApply: true
 
 1. **NEVER run `npm run dev` or `npm run build` without asking first**
 2. **NEVER auto-start development servers**
-3. Use brand colors: Orange #E36B15, Blue #003F7D (from memory) + AXA palette
+3. **Respecter le design Figma à la lettre** - ne pas improviser
 4. No gradients on images
-5. Support both light and dark themes
+5. **Focus ≠ Selected** - Ne pas confondre ces deux états!
 
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router)
 - **Styling**: Tailwind CSS v4
 - **Components**: Shadcn UI (new-york style)
-- **Font**: Source Sans Pro (Source Sans 3)
-- **Icons**: Lucide React
+- **Font principale**: Source Sans Pro (Source Sans 3)
+- **Font hero**: Publico Headline (local, `/public/fonts/`) - PAS italic!
+- **Icons**: Lucide React + SVGs custom (voir axa-design-system.mdc)
 
 ## File Structure
 
 ```
 app/
-├── page.tsx              # Home
+├── page.tsx              # Home (hero + trip selector + bottom sheet)
 ├── form/
-│   ├── trip-type/        # Step 1
-│   ├── destination/      # Step 2
-│   └── dates/            # Step 3
-├── plans/                # Plan selection
-├── checkout/
-│   ├── summary/          # Quote summary
-│   ├── travelers/        # Traveler details
-│   └── payment/          # Payment
-└── confirmation/         # Success
+│   └── page.tsx          # Progressive form (7 sections avec debounce)
+├── plans/                # Plan selection (à implémenter)
+└── ...
 
 components/
-├── ui/                   # Shadcn components
+├── ui/                   # Shadcn components (customized)
+│   └── button.tsx        # avec variants selected, fullWidth, focus state
 └── axa/                  # Custom AXA components
-    ├── Header.tsx
-    ├── ProgressBar.tsx
-    ├── PlanCard.tsx
-    ├── InputField.tsx
-    ├── SelectableCard.tsx
-    ├── RecapSection.tsx
-    ├── DateSelector.tsx
-    └── AddOnCard.tsx
+    ├── Logo.tsx          # SVG AXA logo
+    ├── FormHeader.tsx    # Header form avec Help icon, progress bar
+    ├── YesNoButtons.tsx  # avec focus-visible state
+    ├── InputWithSuffix.tsx  # avec focus-within state
+    ├── InfoTooltip.tsx
+    ├── DestinationPicker.tsx   # Full-screen modal avec images Unsplash
+    ├── DateRangePicker.tsx     # Full-screen calendar, sélection continue
+    ├── ReinsuranceBlock.tsx
+    └── index.ts                # Barrel export
+
+public/
+├── hero.jpg              # Image hero (local, pas URL externe)
+└── fonts/
+    └── PublicoHeadline-*.otf  # Fonts locales (Bold, Extrabold)
 ```
 
 ## Import Patterns
@@ -88,13 +90,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 ## Typography Classes
 
 ```tsx
-// Headings
+// Hero title (Publico Headline - PAS italic!)
+className="font-headline text-[32px] font-bold leading-8 text-white"
+
+// Stats numbers (Publico Headline)
+className="font-headline text-2xl font-extrabold"
+
+// Headings (Source Sans Pro)
 className="text-xl font-bold leading-7 text-[#111B1D]"
 
 // Body
 className="text-base leading-6 text-[#343C3D]"
 
-// Labels/Buttons
+// Labels/Buttons (UPPERCASE)
 className="text-sm font-semibold uppercase tracking-[1px]"
 
 // Small/Caption

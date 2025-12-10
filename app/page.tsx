@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Phone, ChevronRight, Globe } from "lucide-react";
+import { Phone, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -134,21 +134,25 @@ export default function Home() {
         <div className="flex flex-col gap-5">
           <button 
             onClick={() => setIsDrawerOpen(true)}
-            className="relative h-12 border border-[#CCCCCC] rounded bg-white flex items-center px-4 hover:border-[#00008F] transition-colors"
+            className="h-12 rounded border border-[#757575] bg-white flex items-center overflow-hidden hover:border-[#1F1F9C] transition-colors"
           >
-            {/* Globe Icon */}
-            <Globe className="size-6 text-[#757575] mr-3" />
+            {/* Icon container - square, separated with border */}
+            <div className="size-12 flex items-center justify-center border-r border-[#757575]">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.7805 20.561C6.93116 20.561 3 16.6298 3 11.7805C3 6.93116 6.93116 3 11.7805 3C15.4654 3 18.6202 5.26994 19.9227 8.4878M4.09756 15.0732H6.65854C7.66881 15.0732 8.4878 14.2542 8.4878 13.2439V10.8659C8.4878 9.85557 9.3068 9.03658 10.3171 9.03658H12.1463C13.1566 9.03658 13.9756 8.21759 13.9756 7.20732V4.09756M17.4878 15.2927V15.2267M21 15.2163C21 17.5069 17.4878 20.561 17.4878 20.561C17.4878 20.561 13.9756 17.5069 13.9756 15.2163C13.9756 13.3188 15.5481 11.7805 17.4878 11.7805C19.4275 11.7805 21 13.3188 21 15.2163Z" stroke="#343C3D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
             
             {/* Text */}
             <span className={cn(
-              "flex-1 text-base text-left leading-6",
+              "flex-1 px-4 text-base text-left leading-6",
               selectedTrip ? "text-[#111B1D]" : "text-[#757575]"
             )}>
               {selectedTrip?.label || "Select your type of trip"}
             </span>
             
             {/* Chevron */}
-            <ChevronRight className="size-6 text-[#343C3D]" />
+            <ChevronRight className="size-6 text-[#343C3D] mr-4" />
           </button>
         </div>
 

@@ -46,12 +46,37 @@ Disabled background:  #F0F0F0
 Overlay backdrop:     rgba(17, 27, 29, 0.5)
 ```
 
+### ⚠️ CRITICAL: Focus vs Selected States
+```
+FOCUS (temporaire):
+- Apparaît quand on interagit avec un élément (clique, tab)
+- Disparaît quand on clique ailleurs
+- Style: shadow-[0px_0px_0px_3px_rgba(0,0,143,0.5)]
+- Utiliser: focus-visible:shadow-[...] pour boutons
+- Utiliser: focus-within:shadow-[...] pour inputs
+
+SELECTED (persistant):
+- Reste tant que l'option est sélectionnée
+- Style: bg-[rgba(142,187,255,0.2)] + border-[#1F1F9C]
+- PAS de shadow sur l'état selected!
+```
+
 ## 📝 Typography
 
-### Font Family
+### Font Families
 ```css
+/* Police principale - texte courant */
 font-family: 'Source Sans Pro', 'Source Sans 3', sans-serif;
+
+/* Police hero/stats - titres héroïques (PAS italic!) */
+font-family: 'Publico Headline', serif;
+/* Utiliser: font-headline en Tailwind */
 ```
+
+### ⚠️ Publico Headline Usage
+- Hero title sur la Home: `font-headline text-[32px] font-bold`
+- Stats numbers (60, 130, 24/7): `font-headline text-2xl font-extrabold`
+- **JAMAIS en italic!** Toujours `not-italic` ou ne pas spécifier
 
 ### Typography Scale (EXACT FROM FIGMA)
 | Style | Size | Weight | Line Height | Letter Spacing | Tailwind |
@@ -89,7 +114,13 @@ font-family: 'Source Sans Pro', 'Source Sans 3', sans-serif;
 - Button height: `h-12` (48px)
 - Icon container: `size-10` (40px)
 - Avatar tooltip: `size-[30px]`
+- Team avatars: `size-[58px]` avec `-space-x-3` pour overlap
 - Drawer handle: `w-[93px] h-1.5`
+
+### Tailles d'icônes
+- Icônes dans boutons: `size-4` (16px) ⚠️
+- Icônes navigation: `size-6` (24px)
+- Icônes header Help: `size-4` (16px)
 
 ### Border Radius
 - Buttons CTA: `rounded-lg` (8px)
@@ -194,10 +225,12 @@ Utilisé dans le **bottom sheet de la Home**
 </div>
 ```
 
-### Info Tooltip
+### Info Tooltip (avec avatar réel)
 ```tsx
 <div className="bg-[#D9EAEC] p-4 rounded-md flex gap-2.5">
-  <div className="size-[30px] rounded-full bg-[#94B5E8] flex-shrink-0" />
+  <div className="size-[30px] rounded-full overflow-hidden flex-shrink-0">
+    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&h=60&fit=crop&crop=face" alt="" className="size-full object-cover" />
+  </div>
   <p className="text-sm leading-5 text-[#014750]">Info text here...</p>
 </div>
 ```
@@ -271,9 +304,66 @@ Utilisé dans le **bottom sheet de la Home**
 - [ ] Progress bar: `h-1.5 w-[211px]`
 - [ ] Input: `h-12 border-[#CCCCCC]`
 
+## 🎯 Icons SVG Officiels
+
+### Help Icon (Form Header)
+```tsx
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8.00049 1.33923C8.92178 1.33927 9.78794 1.51404 10.5981 1.86365C11.4084 2.21331 12.1131 2.68819 12.7124 3.28748C13.3118 3.88689 13.7865 4.59229 14.1362 5.40271C14.4858 6.21294 14.6606 7.07904 14.6606 8.00037C14.6606 8.92165 14.4858 9.78782 14.1362 10.598C13.7865 11.4083 13.3117 12.1129 12.7124 12.7123C12.1131 13.3116 11.4084 13.7864 10.5981 14.1361C9.78794 14.4857 8.92178 14.6605 8.00049 14.6605C7.07916 14.6605 6.21307 14.4857 5.40283 14.1361C4.59242 13.7864 3.88702 13.3117 3.2876 12.7123C2.68831 12.1129 2.21343 11.4083 1.86377 10.598C1.51416 9.78782 1.3394 8.92165 1.33936 8.00037C1.33936 7.07908 1.51422 6.21291 1.86377 5.40271C2.21347 4.59229 2.68818 3.88689 3.2876 3.28748C3.88702 2.68806 4.59242 2.21335 5.40283 1.86365C6.21303 1.5141 7.07921 1.33923 8.00049 1.33923ZM8.00049 2.66052C6.50998 2.66052 5.24693 3.17775 4.2124 4.21228C3.17787 5.24681 2.66064 6.50985 2.66064 8.00037C2.66072 9.49066 3.17806 10.7531 4.2124 11.7875C5.24693 12.822 6.50998 13.3392 8.00049 13.3392C9.49086 13.3392 10.7531 12.8219 11.7876 11.7875C12.8221 10.753 13.3393 9.49074 13.3394 8.00037C13.3394 6.50985 12.8221 5.24681 11.7876 4.21228C10.7532 3.17793 9.49078 2.6606 8.00049 2.66052ZM8.66064 7.33923V11.3275H7.33936V7.33923H8.66064ZM8.00049 4.67322C8.18766 4.67329 8.34472 4.7362 8.47119 4.86267C8.59763 4.98919 8.66064 5.14614 8.66064 5.33337C8.66064 5.52061 8.59763 5.67756 8.47119 5.80408C8.34472 5.93055 8.18766 5.99346 8.00049 5.99353C7.81325 5.99353 7.6563 5.93052 7.52979 5.80408C7.40324 5.67753 7.33936 5.52069 7.33936 5.33337C7.33936 5.14606 7.40324 4.98922 7.52979 4.86267C7.6563 4.73623 7.81325 4.67322 8.00049 4.67322Z" fill="white" stroke="white" strokeWidth="0.0125"/>
+</svg>
+```
+
+### Globe/Location Icon (Trip Selector)
+```tsx
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M11.7805 20.561C6.93116 20.561 3 16.6298 3 11.7805C3 6.93116 6.93116 3 11.7805 3C15.4654 3 18.6202 5.26994 19.9227 8.4878M4.09756 15.0732H6.65854C7.66881 15.0732 8.4878 14.2542 8.4878 13.2439V10.8659C8.4878 9.85557 9.3068 9.03658 10.3171 9.03658H12.1463C13.1566 9.03658 13.9756 8.21759 13.9756 7.20732V4.09756M17.4878 15.2927V15.2267M21 15.2163C21 17.5069 17.4878 20.561 17.4878 20.561C17.4878 20.561 13.9756 17.5069 13.9756 15.2163C13.9756 13.3188 15.5481 11.7805 17.4878 11.7805C19.4275 11.7805 21 13.3188 21 15.2163Z" stroke="#343C3D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+```
+
+### Burger Menu Icon
+```tsx
+<svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0 16V13.3333H24V16H0ZM0 9.33333V6.66667H24V9.33333H0ZM0 2.66667V0H24V2.66667H0Z" fill="#00008F"/>
+</svg>
+```
+
+## 🖼️ Avatars & Photos
+
+### Règle principale
+**Toujours utiliser de vraies photos humaines**, jamais de placeholders avec gradients, couleurs ou lettres.
+
+### URLs Unsplash recommandées
+```tsx
+// Avatar helper (InfoTooltip)
+const HELPER_AVATAR = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&h=60&fit=crop&crop=face";
+
+// Team avatars (HelpDrawer, HelpModal)
+const TEAM_AVATARS = [
+  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+];
+```
+
+### Pattern avatars superposés
+```tsx
+<div className="flex items-center -space-x-3">
+  {avatars.map((avatar, index) => (
+    <div key={index} className="size-[58px] rounded-full border-2 border-white overflow-hidden">
+      <img src={avatar} alt="" className="size-full object-cover" />
+    </div>
+  ))}
+</div>
+```
+
 ## 🚫 NE PAS FAIRE
 
 - ❌ `opacity-50` pour disabled (utiliser couleurs exactes)
 - ❌ Confondre les 2 types de selectable items
 - ❌ `border-2` (utiliser `border` = 1px)
 - ❌ Run `npm run dev` ou `npm run build` sans demander
+- ❌ Placeholders avec gradients ou lettres pour avatars (utiliser vraies photos)
+- ❌ Icônes `size-5` ou `size-6` dans les boutons (utiliser `size-4` = 16px)
+- ❌ Mettre shadow sur l'état SELECTED (shadow = FOCUS uniquement)
+- ❌ Publico Headline en italic
+- ❌ Fond bleu sur le container d'icône du trip selector (Home)

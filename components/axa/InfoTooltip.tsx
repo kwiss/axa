@@ -8,9 +8,12 @@ interface InfoTooltipProps {
   className?: string;
 }
 
+// Default helper avatar - friendly professional
+const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&h=60&fit=crop&crop=face";
+
 export function InfoTooltip({ 
   children, 
-  avatarSrc = "/avatar.png",
+  avatarSrc = DEFAULT_AVATAR,
   className 
 }: InfoTooltipProps) {
   return (
