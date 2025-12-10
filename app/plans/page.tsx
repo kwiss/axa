@@ -228,6 +228,7 @@ export default function PlansPage() {
           plans={PLANS_DATA}
           selectedPlanId={selectedPlanId}
           onSelectPlan={setSelectedPlanId}
+          options={{ align: "center", containScroll: false }}
         />
 
         {/* Plan Details Section */}

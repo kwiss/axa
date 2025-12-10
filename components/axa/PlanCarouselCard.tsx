@@ -32,11 +32,11 @@ export function PlanCarouselCard({
       type="button"
       onClick={onSelect}
       className={cn(
-        "flex flex-col items-center rounded-lg shrink-0 w-[207px] bg-white",
-        // Simple shadow, no overflow issues
+        "flex flex-col items-center rounded-lg shrink-0 w-[207px] h-full bg-white overflow-hidden",
+        // Simple shadow
         "shadow-[0px_0px_4px_0px_rgba(0,0,0,0.2)]",
-        // Selected state: blue border
-        isSelected && "border-2 border-[#00008F]",
+        // Ring for selection (doesn't take space, so no white gap)
+        isSelected && "ring-2 ring-[#00008F]",
         className
       )}
     >
@@ -49,7 +49,7 @@ export function PlanCarouselCard({
         </div>
       ) : (
         // Empty space to keep same height
-        <div className="w-full h-[34px]" />
+        <div className="w-full h-[32px]" />
       )}
 
       {/* Card Content */}

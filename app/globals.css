@@ -237,3 +237,60 @@
 .font-headline {
   font-family: 'Publico Headline', Georgia, serif;
 }
+
+/* ============================================
+   Embla Carousel Styles
+   ============================================ */
+.embla {
+  --slide-spacing: 1rem;
+  --slide-size: 207px;
+}
+
+.embla__viewport {
+  overflow: hidden;
+  padding: 4px 0;
+  margin: -4px 0;
+}
+
+.embla__container {
+  display: flex;
+  align-items: stretch;
+  touch-action: pan-y pinch-zoom;
+  margin-left: calc(var(--slide-spacing) * -1);
+}
+
+.embla__slide {
+  transform: translate3d(0, 0, 0);
+  flex: 0 0 var(--slide-size);
+  min-width: 0;
+  padding-left: var(--slide-spacing);
+}
+
+.embla__dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
+.embla__dot {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background-color: #CCCCCC;
+  transition: background-color 0.2s ease;
+}
+
+.embla__dot--selected {
+  background-color: #00008F;
+}

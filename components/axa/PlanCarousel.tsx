@@ -1,9 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { cn } from "@/lib/utils";
 import { PlanCarouselCard } from "./PlanCarouselCard";
+
+// ============================================
+// Types
+// ============================================
 
 export interface Plan {
   id: string;
@@ -16,116 +21,130 @@ interface PlanCarouselProps {
   plans: Plan[];
   selectedPlanId: string;
   onSelectPlan: (planId: string) => void;
+  options?: EmblaOptionsType;
   className?: string;
 }
+
+// ============================================
+// useDotButton Hook (from Embla docs)
+// ============================================
+
+type UseDotButtonType = {
+  selectedIndex: number;
+  scrollSnaps: number[];
+  onDotButtonClick: (index: number) => void;
+};
+
+const useDotButton = (
+  emblaApi: EmblaCarouselType | undefined
+): UseDotButtonType => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const onDotButtonClick = useCallback(
+    (index: number) => {
+      if (!emblaApi) return;
+      emblaApi.scrollTo(index);
+    },
+    [emblaApi]
+  );
+
+  const onInit = useCallback((emblaApi: EmblaCarouselType) => {
+    setScrollSnaps(emblaApi.scrollSnapList());
+  }, []);
+
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    onInit(emblaApi);
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onInit).on("reInit", onSelect).on("select", onSelect);
+  }, [emblaApi, onInit, onSelect]);
+
+  return {
+    selectedIndex,
+    scrollSnaps,
+    onDotButtonClick,
+  };
+};
+
+// ============================================
+// PlanCarousel Component
+// ============================================
 
 export function PlanCarousel({
   plans,
   selectedPlanId,
   onSelectPlan,
+  options,
   className,
 }: PlanCarouselProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "center",
-    containScroll: false, // Allow scrolling past edges to center first/last
-    loop: false,
-    skipSnaps: false,
-    startIndex: plans.findIndex((p) => p.id === selectedPlanId),
-    duration: 30, // Smooth slide animation (higher = slower/smoother)
-  });
+  const [emblaRef, emblaApi] = useEmblaCarousel(options);
 
-  const [selectedIndex, setSelectedIndex] = useState(
-    plans.findIndex((p) => p.id === selectedPlanId)
-  );
+  const { selectedIndex, scrollSnaps, onDotButtonClick } =
+    useDotButton(emblaApi);
 
-  // Sync selected index when embla settles
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    const index = emblaApi.selectedScrollSnap();
-    setSelectedIndex(index);
-    // Update parent state with the new selected plan
-    if (plans[index]) {
-      onSelectPlan(plans[index].id);
-    }
-  }, [emblaApi, plans, onSelectPlan]);
-
+  // Sync parent state when selection changes
   useEffect(() => {
-    if (!emblaApi) return;
-    emblaApi.on("select", onSelect);
-    return () => {
-      emblaApi.off("select", onSelect);
-    };
-  }, [emblaApi, onSelect]);
-
-  // Scroll to selected plan when it changes from outside
-  useEffect(() => {
-    if (!emblaApi) return;
-    const targetIndex = plans.findIndex((p) => p.id === selectedPlanId);
-    if (targetIndex !== -1 && targetIndex !== emblaApi.selectedScrollSnap()) {
-      emblaApi.scrollTo(targetIndex);
+    if (plans[selectedIndex]) {
+      onSelectPlan(plans[selectedIndex].id);
     }
-  }, [emblaApi, selectedPlanId, plans]);
+  }, [selectedIndex, plans, onSelectPlan]);
 
   // Handle click on a card
-  const handleCardClick = (index: number, planId: string) => {
-    if (emblaApi) {
-      emblaApi.scrollTo(index);
-    }
-    onSelectPlan(planId);
-  };
-
-  // Handle click on pagination dot
-  const handleDotClick = (index: number) => {
-    if (emblaApi) {
-      emblaApi.scrollTo(index);
-    }
+  const handleCardClick = (index: number) => {
+    if (!emblaApi) return;
+    emblaApi.scrollTo(index);
   };
 
   return (
-    <div className={cn("flex flex-col items-center", className)}>
-      {/* Embla Carousel */}
-      <div className="w-full overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-4">
+    <section className={cn("embla", className)}>
+      {/* Viewport */}
+      <div className="embla__viewport" ref={emblaRef}>
+        {/* Container */}
+        <div className="embla__container gap-4">
           {plans.map((plan, index) => (
             <div
               key={plan.id}
               className={cn(
-                "flex-none transition-all duration-300 ease-out",
+                "embla__slide",
                 index === selectedIndex
                   ? "scale-100 opacity-100"
                   : "scale-95 opacity-70"
               )}
-              style={{ width: "207px" }}
+              style={{ transition: "transform 0.3s ease-out, opacity 0.3s ease-out" }}
             >
               <PlanCarouselCard
                 name={plan.name}
                 price={plan.price}
                 isSelected={index === selectedIndex}
                 isRecommended={plan.isRecommended}
-                onSelect={() => handleCardClick(index, plan.id)}
+                onSelect={() => handleCardClick(index)}
               />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Pagination Dots */}
-      <div className="flex gap-3 items-center justify-center py-4">
-        {plans.map((plan, index) => (
+      {/* Dots */}
+      <div className="embla__dots">
+        {scrollSnaps.map((_, index) => (
           <button
-            key={plan.id}
+            key={index}
             type="button"
-            onClick={() => handleDotClick(index)}
+            onClick={() => onDotButtonClick(index)}
             className={cn(
-              "size-2.5 rounded-full transition-colors",
-              index === selectedIndex
-                ? "bg-[#00008F]"
-                : "bg-[#CCCCCC]"
+              "embla__dot",
+              index === selectedIndex && "embla__dot--selected"
             )}
-            aria-label={`Select ${plan.name} plan`}
+            aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
