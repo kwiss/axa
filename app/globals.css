@@ -1,26 +1,239 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Publico Headline Font - Local */
+@font-face {
+  font-family: 'Publico Headline';
+  src: url('/fonts/PublicoHeadline-Roman-Trial.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
+
+@font-face {
+  font-family: 'Publico Headline';
+  src: url('/fonts/PublicoHeadline-Medium-Trial.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Publico Headline';
+  src: url('/fonts/PublicoHeadline-Bold-Trial.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Publico Headline';
+  src: url('/fonts/PublicoHeadline-Extrabold-Trial.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Publico Headline';
+  src: url('/fonts/PublicoHeadline-Black-Trial.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-source-sans);
+  --font-headline: 'Publico Headline', Georgia, serif;
   --font-mono: var(--font-geist-mono);
+  
+  /* AXA Blue Scale */
+  --color-axa-blue-400: #00008F;
+  --color-axa-blue-300: #1F1F9C;
+  --color-axa-blue-200: #3D3DAA;
+  --color-axa-blue-100: #5C5CB7;
+  
+  /* AXA Semantic Colors */
+  --color-axa-green: #138636;
+  --color-axa-sienna: #D24723;
+  --color-axa-teal: #014750;
+  --color-axa-viridian: #181F1E;
+  --color-trustpilot: #00B67A;
+  
+  /* Grey Scale */
+  --color-grey-900: #111B1D;
+  --color-grey-800: #343C3D;
+  --color-grey-600: #757575;
+  --color-grey-400: #CCCCCC;
+  --color-grey-300: #E5E5E5;
+  --color-grey-200: #F0F0F0;
+  --color-grey-100: #FAFAFA;
+  --color-grey-0: #FFFFFF;
+  
+  /* Shadcn semantic colors */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.5rem;
+  
+  /* AXA Light Theme */
+  --background: #FFFFFF;
+  --foreground: #111B1D;
+  
+  --card: #FFFFFF;
+  --card-foreground: #111B1D;
+  
+  --popover: #FFFFFF;
+  --popover-foreground: #111B1D;
+  
+  /* Primary = AXA Blue */
+  --primary: #00008F;
+  --primary-foreground: #FFFFFF;
+  
+  /* Secondary = Light grey */
+  --secondary: #F0F0F0;
+  --secondary-foreground: #111B1D;
+  
+  --muted: #FAFAFA;
+  --muted-foreground: #757575;
+  
+  --accent: #F0F0F0;
+  --accent-foreground: #00008F;
+  
+  --destructive: #D24723;
+  --destructive-foreground: #FFFFFF;
+  
+  --success: #138636;
+  --success-foreground: #FFFFFF;
+  
+  --warning: #FFF2C3;
+  --warning-foreground: #343C3D;
+  
+  --border: #E5E5E5;
+  --input: #E5E5E5;
+  --ring: #00008F;
+  
+  /* Charts */
+  --chart-1: #00008F;
+  --chart-2: #138636;
+  --chart-3: #D24723;
+  --chart-4: #014750;
+  --chart-5: #5C5CB7;
+  
+  /* Sidebar */
+  --sidebar: #FAFAFA;
+  --sidebar-foreground: #111B1D;
+  --sidebar-primary: #00008F;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F0F0F0;
+  --sidebar-accent-foreground: #00008F;
+  --sidebar-border: #E5E5E5;
+  --sidebar-ring: #00008F;
+}
+
+.dark {
+  --background: #111B1D;
+  --foreground: #FFFFFF;
+  
+  --card: #1A2426;
+  --card-foreground: #FFFFFF;
+  
+  --popover: #1A2426;
+  --popover-foreground: #FFFFFF;
+  
+  --primary: #5C5CB7;
+  --primary-foreground: #FFFFFF;
+  
+  --secondary: #343C3D;
+  --secondary-foreground: #FFFFFF;
+  
+  --muted: #343C3D;
+  --muted-foreground: #CCCCCC;
+  
+  --accent: #343C3D;
+  --accent-foreground: #5C5CB7;
+  
+  --destructive: #D24723;
+  --destructive-foreground: #FFFFFF;
+  
+  --success: #138636;
+  --success-foreground: #FFFFFF;
+  
+  --warning: #FFF2C3;
+  --warning-foreground: #343C3D;
+  
+  --border: #343C3D;
+  --input: #343C3D;
+  --ring: #5C5CB7;
+  
+  --chart-1: #5C5CB7;
+  --chart-2: #138636;
+  --chart-3: #D24723;
+  --chart-4: #014750;
+  --chart-5: #3D3DAA;
+  
+  --sidebar: #1A2426;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #5C5CB7;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #343C3D;
+  --sidebar-accent-foreground: #5C5CB7;
+  --sidebar-border: #343C3D;
+  --sidebar-ring: #5C5CB7;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Publico Headline utility class - NOT ITALIC */
+.font-headline {
+  font-family: 'Publico Headline', Georgia, serif;
 }

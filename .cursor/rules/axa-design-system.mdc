@@ -1,0 +1,279 @@
+---
+description: AXA Travel Insurance Design System - Complete UI/UX Rules
+globs: ["**/*.tsx", "**/*.ts", "**/*.css"]
+alwaysApply: true
+---
+
+# AXA Travel Insurance - Design System Rules
+
+## 🎨 Color Palette
+
+### Primary Colors (AXA Blue)
+```
+$axa-blue-400: #00008F  (Primary - main brand color)
+$axa-blue-300: #1F1F9C  (Primary hover/active state)
+$axa-blue-200: #3D3DAA  (Lighter variant)
+$axa-blue-100: #5C5CB7  (Lightest variant)
+```
+
+### Semantic Colors
+```
+$green:        #138636  (Success, CTA secondaire, "Call" button)
+$sienna-400:   #D24723  (Destructive, errors)
+$teal-400:     #014750  (Info tooltips text)
+$teal-bg:      #D9EAEC  (Info tooltips background)
+$trustpilot:   #00B67A  (Trustpilot stars)
+```
+
+### Grey Scale
+```
+$grey-900:     #111B1D  (Headings, primary text)
+$grey-800:     #343C3D  (Body text, labels)
+$grey-600:     #757575  (Borders unselected, placeholder)
+$grey-400:     #CCCCCC  (Borders disabled, muted, input borders)
+$grey-300:     #E5E5E5  (Dividers)
+$grey-200:     #F0F0F0  (Backgrounds disabled, progress track)
+$grey-100:     #FAFAFA  (Subtle backgrounds)
+$white:        #FFFFFF  (Cards, page background)
+```
+
+### State Colors
+```
+Selected background:  rgba(142, 187, 255, 0.2) ou #E8F1FF
+Selected border:      #1F1F9C ou #00008F
+Disabled text:        #CCCCCC
+Disabled background:  #F0F0F0
+Overlay backdrop:     rgba(17, 27, 29, 0.5)
+```
+
+## 📝 Typography
+
+### Font Family
+```css
+font-family: 'Source Sans Pro', 'Source Sans 3', sans-serif;
+```
+
+### Typography Scale (EXACT FROM FIGMA)
+| Style | Size | Weight | Line Height | Letter Spacing | Tailwind |
+|-------|------|--------|-------------|----------------|----------|
+| H1 | 24px | 700 Bold | 32px | 0 | `text-2xl font-bold leading-8` |
+| H2 | 20px | 700 Bold | 28px | 0 | `text-xl font-bold leading-7` |
+| Hero Title | 32px | 700 Bold | 32px | 0 | `text-[32px] font-bold leading-8` |
+| Lead Paragraph | 20px | 400 Regular | 28px | 0 | `text-xl leading-7` |
+| Paragraph Semibold | 16px | 600 SemiBold | 24px | 0 | `text-base font-semibold leading-6` |
+| Paragraph | 16px | 400 Regular | 24px | 0 | `text-base leading-6` |
+| Button/Label | 14px | 600 SemiBold | 16px | 1px | `text-sm font-semibold uppercase tracking-[1px]` |
+| Button Small | 12px | 600 SemiBold | 16px | 1px | `text-xs font-semibold uppercase tracking-[1px]` |
+| Small | 12px | 400 Regular | 16px | 0 | `text-xs leading-4` |
+
+### Text Colors
+- Headings: `text-[#111B1D]` ($grey-900)
+- Body text: `text-[#343C3D]` ($grey-800)
+- Placeholder: `text-[#757575]` ($grey-600)
+- Disabled: `text-[#CCCCCC]` ($grey-400)
+- Selected/Active: `text-[#00008F]` or `text-[#1F1F9C]`
+- White (on dark): `text-white`
+
+## 📐 Spacing & Layout
+
+### Page Layout
+- Page padding: `px-6` (24px horizontal)
+- Header padding: `px-6 h-[72px]` (Home) ou `px-5 py-4` (Form)
+- Section gap: `gap-6` (24px)
+- Form field gap: `gap-4` (16px)
+
+### Component Specifics
+- Progress bar width: `w-[211px]`
+- Progress bar height: `h-1.5` (6px)
+- Input height: `h-12` (48px)
+- Button height: `h-12` (48px)
+- Icon container: `size-10` (40px)
+- Avatar tooltip: `size-[30px]`
+- Drawer handle: `w-[93px] h-1.5`
+
+### Border Radius
+- Buttons CTA: `rounded-lg` (8px)
+- Buttons outline: `rounded` (4px)
+- Input/Select: `rounded` (4px)
+- Form Selectable cards: `rounded` (4px)
+- Home Drawer options: `rounded-lg` (8px)
+- Bottom sheet: `rounded-t-2xl` (16px)
+- Tooltips: `rounded-md` (6px)
+- Progress bar: `rounded-lg` (8px)
+- Help button: `rounded-full`
+- Drawer handle: `rounded-full`
+
+## 🧩 Components
+
+### ⚠️ IMPORTANT: 2 Types de Selectable Items
+
+#### Type 1: Form Step Cards (UPPERCASE)
+Utilisé dans les **étapes du formulaire** (trip type selection dans form)
+```tsx
+// Unselected
+<button className="w-full flex items-center gap-4 p-1.5 border border-[#757575] bg-white rounded">
+  <div className="size-10 rounded bg-[#D9D9D9]" />
+  <span className="flex-1 text-sm font-semibold uppercase tracking-[1px] text-[#343C3D] text-center leading-4">
+    SOLO TRIP
+  </span>
+</button>
+
+// Selected
+<button className="w-full flex items-center gap-4 p-1.5 border border-[#00008F] bg-[#E8F1FF] rounded">
+  <div className="size-10 rounded bg-[#94B5E8]" />
+  <span className="flex-1 text-sm font-semibold uppercase tracking-[1px] text-[#00008F] text-center leading-4">
+    PARTNER TRIP
+  </span>
+</button>
+```
+
+#### Type 2: Home Drawer Options (Normal case)
+Utilisé dans le **bottom sheet de la Home**
+```tsx
+// Unselected
+<button className="w-full flex items-center gap-4 p-1.5 rounded-lg bg-white hover:bg-[#F0F0F0]">
+  <div className="size-10 rounded bg-[#E8F1FF]" />
+  <span className="text-base leading-6 text-[#343C3D]">
+    Partner trip
+  </span>
+</button>
+
+// Selected
+<button className="w-full flex items-center gap-4 p-1.5 rounded-lg bg-[rgba(142,187,255,0.2)]">
+  <div className="size-10 rounded bg-white" />
+  <span className="text-base leading-6 text-[#00008F]">
+    Solo trip
+  </span>
+</button>
+```
+
+### Primary Button (CTA)
+```tsx
+<button className="w-full h-12 px-6 py-4 bg-[#00008F] text-white rounded-lg text-sm font-semibold uppercase tracking-[1px] hover:bg-[#1F1F9C] disabled:bg-[#F0F0F0] disabled:text-[#CCCCCC]">
+  GET A QUOTE
+</button>
+```
+
+### Outline Button
+```tsx
+// Unselected
+<button className="w-full h-12 px-6 py-4 border border-[#1F1F9C] bg-transparent rounded text-sm font-semibold uppercase tracking-[1px] text-[#343C3D]">
+  A SINGLE TRIP
+</button>
+
+// Selected
+<button className="w-full h-12 px-6 py-4 border border-[#1F1F9C] bg-[rgba(142,187,255,0.2)] rounded text-sm font-semibold uppercase tracking-[1px] text-[#1F1F9C]">
+  A MULTI-TRIP
+</button>
+```
+
+### Yes/No Buttons
+```tsx
+<div className="flex gap-4">
+  <button className="flex-1 h-12 px-6 py-4 rounded border border-[#1F1F9C] bg-[rgba(142,187,255,0.2)] text-sm font-semibold uppercase tracking-[1px] text-[#1F1F9C]">YES</button>
+  <button className="flex-1 h-12 px-6 py-4 rounded border border-[#1F1F9C] bg-transparent text-sm font-semibold uppercase tracking-[1px] text-[#343C3D]">NO</button>
+</div>
+```
+
+### Input Field
+```tsx
+<div className="h-12 border border-[#CCCCCC] rounded bg-white flex items-center px-4">
+  <Globe className="size-6 text-[#757575] mr-3" />
+  <span className="flex-1 text-base text-[#757575] leading-6">Select your type of trip</span>
+  <ChevronRight className="size-6 text-[#343C3D]" />
+</div>
+```
+
+### Input with Suffix (€)
+```tsx
+<div className="flex h-12 border border-[#757575] rounded overflow-hidden">
+  <input className="flex-1 px-4 py-3 text-base text-[#111B1D] bg-white outline-none placeholder:text-[#757575]" placeholder="2000" />
+  <div className="px-4 flex items-center bg-[rgba(142,187,255,0.2)] border-l border-[#757575]">
+    <span className="text-base font-semibold text-[#1F1F9C]">€</span>
+  </div>
+</div>
+```
+
+### Info Tooltip
+```tsx
+<div className="bg-[#D9EAEC] p-4 rounded-md flex gap-2.5">
+  <div className="size-[30px] rounded-full bg-[#94B5E8] flex-shrink-0" />
+  <p className="text-sm leading-5 text-[#014750]">Info text here...</p>
+</div>
+```
+
+### Bottom Sheet / Drawer
+```tsx
+{/* Backdrop */}
+<div className="fixed inset-0 bg-[rgba(17,27,29,0.5)] z-40" onClick={close} />
+
+{/* Sheet */}
+<div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl z-50 px-4 pt-4 pb-6 flex flex-col items-center gap-6">
+  {/* Handle */}
+  <div className="w-[93px] h-1.5 bg-[#D9D9D9] rounded-full" />
+  {/* Content */}
+</div>
+```
+
+### Header - Home
+```tsx
+<header className="h-[72px] px-6 flex items-center justify-between bg-white border-b border-[#F0F0F0]">
+  <Logo />
+  <div className="flex items-center gap-4">
+    <PhoneButton />
+    <MenuButton />
+  </div>
+</header>
+```
+
+### Header - Form Steps
+```tsx
+<header className="sticky top-0 z-50 bg-white px-5 py-4">
+  <div className="flex items-center justify-between h-6">
+    <div className="flex items-center gap-0.5">
+      <BackButton />
+      <ProgressBar />
+      <StepCounter />
+    </div>
+    <HelpButton />
+  </div>
+</header>
+```
+
+### Progress Bar
+```tsx
+<div className="w-[211px] h-1.5 bg-[#F0F0F0] rounded-lg overflow-hidden">
+  <div className="h-full bg-[#00008F] rounded-lg" style={{ width: '50%' }} />
+</div>
+<span className="text-xs text-[#343C3D] ml-1">2/4</span>
+```
+
+### Trustpilot Stars
+```tsx
+<div className="flex gap-0.5">
+  {[1,2,3,4,5].map(i => (
+    <div key={i} className="size-[18px] bg-[#00B67A] flex items-center justify-center">
+      <StarIcon className="size-3.5 text-white" />
+    </div>
+  ))}
+</div>
+<p className="text-xs text-[#111B1D] leading-4">Rated 4.6/5 by thousands of travellers</p>
+```
+
+## ✅ Checklist
+
+- [ ] Boutons CTA: UPPERCASE + `tracking-[1px]` + `rounded-lg`
+- [ ] Boutons outline: UPPERCASE + `tracking-[1px]` + `rounded`
+- [ ] Form cards: UPPERCASE + `tracking-[1px]` + `rounded` + border
+- [ ] Home drawer: Normal case + `rounded-lg` + NO border
+- [ ] Disabled: `bg-[#F0F0F0] text-[#CCCCCC]` (PAS opacity)
+- [ ] Selected: `bg-[rgba(142,187,255,0.2)]` ou `bg-[#E8F1FF]`
+- [ ] Progress bar: `h-1.5 w-[211px]`
+- [ ] Input: `h-12 border-[#CCCCCC]`
+
+## 🚫 NE PAS FAIRE
+
+- ❌ `opacity-50` pour disabled (utiliser couleurs exactes)
+- ❌ Confondre les 2 types de selectable items
+- ❌ `border-2` (utiliser `border` = 1px)
+- ❌ Run `npm run dev` ou `npm run build` sans demander
