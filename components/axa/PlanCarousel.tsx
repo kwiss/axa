@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { cn } from "@/lib/utils";
 import { PlanCarouselCard } from "./PlanCarouselCard";
 
@@ -8,6 +9,7 @@ export interface Plan {
   id: string;
   name: string;
   price: number;
+  isRecommended?: boolean;
 }
 
 interface PlanCarouselProps {
@@ -23,97 +25,100 @@ export function PlanCarousel({
   onSelectPlan,
   className,
 }: PlanCarouselProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "center",
+    containScroll: false, // Allow scrolling past edges to center first/last
+    loop: false,
+    skipSnaps: false,
+    startIndex: plans.findIndex((p) => p.id === selectedPlanId),
+    duration: 30, // Smooth slide animation (higher = slower/smoother)
+  });
 
-  // Scroll to center the selected plan
-  const scrollToCenter = useCallback((planId: string) => {
-    const container = scrollContainerRef.current;
-    const card = cardRefs.current.get(planId);
-    if (!container || !card) return;
+  const [selectedIndex, setSelectedIndex] = useState(
+    plans.findIndex((p) => p.id === selectedPlanId)
+  );
 
-    const containerWidth = container.clientWidth;
-    const cardRect = card.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-    
-    // Current position of card relative to container's visible area
-    const cardLeftRelative = cardRect.left - containerRect.left;
-    const cardCenter = cardLeftRelative + cardRect.width / 2;
-    const containerCenter = containerWidth / 2;
-    
-    // How much we need to scroll to center the card
-    const scrollAdjustment = cardCenter - containerCenter;
-    const newScrollPosition = container.scrollLeft + scrollAdjustment;
-    
-    container.scrollTo({
-      left: newScrollPosition,
-      behavior: "smooth",
-    });
-  }, []);
+  // Sync selected index when embla settles
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    const index = emblaApi.selectedScrollSnap();
+    setSelectedIndex(index);
+    // Update parent state with the new selected plan
+    if (plans[index]) {
+      onSelectPlan(plans[index].id);
+    }
+  }, [emblaApi, plans, onSelectPlan]);
 
-  // Scroll to selected plan on mount and when selection changes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      scrollToCenter(selectedPlanId);
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [selectedPlanId, scrollToCenter]);
+    if (!emblaApi) return;
+    emblaApi.on("select", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
-  // Handle plan selection
-  const handleSelectPlan = (planId: string) => {
+  // Scroll to selected plan when it changes from outside
+  useEffect(() => {
+    if (!emblaApi) return;
+    const targetIndex = plans.findIndex((p) => p.id === selectedPlanId);
+    if (targetIndex !== -1 && targetIndex !== emblaApi.selectedScrollSnap()) {
+      emblaApi.scrollTo(targetIndex);
+    }
+  }, [emblaApi, selectedPlanId, plans]);
+
+  // Handle click on a card
+  const handleCardClick = (index: number, planId: string) => {
+    if (emblaApi) {
+      emblaApi.scrollTo(index);
+    }
     onSelectPlan(planId);
   };
 
-  // Set ref for a card
-  const setCardRef = (planId: string) => (el: HTMLDivElement | null) => {
-    if (el) {
-      cardRefs.current.set(planId, el);
-    } else {
-      cardRefs.current.delete(planId);
+  // Handle click on pagination dot
+  const handleDotClick = (index: number) => {
+    if (emblaApi) {
+      emblaApi.scrollTo(index);
     }
   };
 
   return (
     <div className={cn("flex flex-col items-center", className)}>
-      {/* Scrollable Cards Container */}
-      <div
-        ref={scrollContainerRef}
-        className="w-full overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden"
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}
-      >
-        <div className="flex gap-4 items-start">
-          {/* Left spacer to allow first card to center */}
-          <div className="shrink-0" style={{ width: "calc(50vw - 103.5px)" }} />
-          
-          {plans.map((plan) => (
-            <div key={plan.id} ref={setCardRef(plan.id)} className="shrink-0">
+      {/* Embla Carousel */}
+      <div className="w-full overflow-hidden" ref={emblaRef}>
+        <div className="flex gap-4">
+          {plans.map((plan, index) => (
+            <div
+              key={plan.id}
+              className={cn(
+                "flex-none transition-all duration-300 ease-out",
+                index === selectedIndex
+                  ? "scale-100 opacity-100"
+                  : "scale-95 opacity-70"
+              )}
+              style={{ width: "207px" }}
+            >
               <PlanCarouselCard
                 name={plan.name}
                 price={plan.price}
-                isSelected={plan.id === selectedPlanId}
-                onSelect={() => handleSelectPlan(plan.id)}
+                isSelected={index === selectedIndex}
+                isRecommended={plan.isRecommended}
+                onSelect={() => handleCardClick(index, plan.id)}
               />
             </div>
           ))}
-          
-          {/* Right spacer to allow last card to center */}
-          <div className="shrink-0" style={{ width: "calc(50vw - 103.5px)" }} />
         </div>
       </div>
 
       {/* Pagination Dots */}
       <div className="flex gap-3 items-center justify-center py-4">
-        {plans.map((plan) => (
+        {plans.map((plan, index) => (
           <button
             key={plan.id}
             type="button"
-            onClick={() => handleSelectPlan(plan.id)}
+            onClick={() => handleDotClick(index)}
             className={cn(
               "size-2.5 rounded-full transition-colors",
-              plan.id === selectedPlanId
+              index === selectedIndex
                 ? "bg-[#00008F]"
                 : "bg-[#CCCCCC]"
             )}

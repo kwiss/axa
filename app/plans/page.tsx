@@ -31,6 +31,7 @@ const PLANS_DATA: (Plan & { coverages: Coverage[] })[] = [
     id: "basic",
     name: "Basic",
     price: 32.23,
+    isRecommended: false,
     coverages: [
       { id: "trip-interruption", label: "Trip Interruption", amount: "2,500 €", included: true },
       { id: "medical-expenses", label: "Emergency Medical Expenses", amount: "50,000 €", included: true },
@@ -43,6 +44,7 @@ const PLANS_DATA: (Plan & { coverages: Coverage[] })[] = [
     id: "essential",
     name: "Essential",
     price: 62.23,
+    isRecommended: true,
     coverages: [
       { id: "trip-interruption", label: "Trip Interruption", amount: "2,500 €", included: true },
       { id: "medical-expenses", label: "Emergency Medical Expenses", amount: "100,000 €", included: true },
@@ -55,6 +57,7 @@ const PLANS_DATA: (Plan & { coverages: Coverage[] })[] = [
     id: "premium",
     name: "Premium",
     price: 86.23,
+    isRecommended: false,
     coverages: [
       { id: "trip-interruption", label: "Trip Interruption", amount: "5,000 €", included: true },
       { id: "medical-expenses", label: "Emergency Medical Expenses", amount: "150,000 €", included: true },

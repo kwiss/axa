@@ -7,6 +7,7 @@ interface PlanCarouselCardProps {
   price: number;
   currency?: string;
   isSelected?: boolean;
+  isRecommended?: boolean;
   onSelect?: () => void;
   className?: string;
 }
@@ -16,6 +17,7 @@ export function PlanCarouselCard({
   price,
   currency = "€",
   isSelected = false,
+  isRecommended = false,
   onSelect,
   className,
 }: PlanCarouselCardProps) {
@@ -38,8 +40,8 @@ export function PlanCarouselCard({
         className
       )}
     >
-      {/* Badge - only visible when selected */}
-      {isSelected ? (
+      {/* Badge - visible when recommended (always shown for Essential) */}
+      {isRecommended ? (
         <div className="w-full bg-[#00008F] rounded-t-md px-1.5 py-1 flex items-center justify-center">
           <span className="text-sm font-semibold leading-6 text-white">
             Recommanded for you
