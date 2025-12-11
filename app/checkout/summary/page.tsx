@@ -155,7 +155,7 @@ export default function CheckoutSummaryPage() {
       </div>
 
       {/* Sticky Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white px-6 py-4 shadow-[0px_0px_4px_0px_rgba(0,0,0,0.2)]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white px-6 py-4 shadow-[0px_0px_4px_0px_rgba(0,0,0,0.2)]">
         <Button onClick={handleContinueToPayment} fullWidth>
           Continue and pay {formattedTotalPrice} €
         </Button>

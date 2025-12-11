@@ -113,8 +113,8 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Stats - gap-16 (16px) */}
-        <div className="relative z-10 flex flex-col gap-4 w-full">
+        {/* Stats - gap-8 (8px) */}
+        <div className="relative z-10 flex flex-col gap-2 w-full">
           {/* 60 Years - Publico Headline Extrabold 24px + Source Sans SemiBold 16px */}
           <p className="text-white">
             <span className="font-headline text-2xl font-extrabold">60</span>
