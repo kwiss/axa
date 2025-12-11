@@ -48,6 +48,11 @@ export default function FormPage() {
   // null = not yet determined, true = back nav (don't scroll), false = fresh visit (scroll OK)
   const isBackNavigation = useRef<boolean | null>(null);
   const hasCheckedBackNav = useRef(false);
+
+  // Validation states - triggered by blur or Enter (no more timeouts!)
+  // Start as false - will be set by back navigation detection if data exists
+  const [tripCostValidated, setTripCostValidated] = useState(false);
+  const [travelerAgeValidated, setTravelerAgeValidated] = useState(false);
   
   // Detect back navigation after Zustand hydration
   // This effect runs when insuranceType changes (including after hydration from localStorage)
@@ -56,6 +61,15 @@ export default function FormPage() {
       // Data already exists = back navigation
       hasCheckedBackNav.current = true;
       isBackNavigation.current = true;
+      
+      // Set validation states based on existing data (for back navigation)
+      if (tripCost !== null && tripCost > 0) {
+        setTripCostValidated(true);
+      }
+      if (travelers.length > 0 && travelers[0]?.age !== null && travelers[0]?.age > 0) {
+        setTravelerAgeValidated(true);
+      }
+      
       // Scroll to top since user is coming back to edit
       window.scrollTo({ top: 0, behavior: "instant" });
       // After a short delay, allow future interactions to trigger scrolls
@@ -67,16 +81,7 @@ export default function FormPage() {
       hasCheckedBackNav.current = true;
       isBackNavigation.current = false;
     }
-  }, [insuranceType]);
-
-  // Validation states - triggered by blur or Enter (no more timeouts!)
-  // Initialize based on existing store values (for back navigation)
-  const [tripCostValidated, setTripCostValidated] = useState(
-    tripCost !== null && tripCost > 0
-  );
-  const [travelerAgeValidated, setTravelerAgeValidated] = useState(
-    travelers.length > 0 && travelers[0]?.age !== null && travelers[0]?.age > 0
-  );
+  }, [insuranceType, tripCost, travelers]);
 
   // Refs for auto-scroll
   const section2Ref = useRef<HTMLDivElement>(null);

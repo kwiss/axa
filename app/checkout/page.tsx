@@ -172,6 +172,43 @@ export default function CheckoutPage() {
     phoneNumber: policyholder.phoneNumber,
     email: policyholder.email,
   });
+
+  // Sync local state with store when store hydrates (for back navigation)
+  const hasSyncedWithStore = useRef(false);
+  useEffect(() => {
+    // Only sync once, when store has data and local state is empty
+    if (hasSyncedWithStore.current) return;
+    
+    const hasStoreData = travelers.some(t => t.name || t.firstName || t.birthDate);
+    const hasLocalData = localTravelers.some(t => t.name || t.firstName || t.birthDate);
+    
+    if (hasStoreData && !hasLocalData) {
+      hasSyncedWithStore.current = true;
+      setLocalTravelers(
+        travelers.map((t, i) => ({
+          name: t.name || "",
+          firstName: t.firstName || "",
+          birthDate: t.birthDate || "",
+          isPolicyholder: i === 0,
+        }))
+      );
+    }
+  }, [travelers, localTravelers]);
+
+  useEffect(() => {
+    const hasStoreData = policyholder.address || policyholder.city || policyholder.email;
+    const hasLocalData = localPolicyholder.address || localPolicyholder.city || localPolicyholder.email;
+    
+    if (hasStoreData && !hasLocalData) {
+      setLocalPolicyholder({
+        address: policyholder.address,
+        city: policyholder.city,
+        postcode: policyholder.postcode,
+        phoneNumber: policyholder.phoneNumber,
+        email: policyholder.email,
+      });
+    }
+  }, [policyholder, localPolicyholder]);
   
   // Form state uses store values directly where possible
   const formState: FormState = {
@@ -209,12 +246,64 @@ export default function CheckoutPage() {
   const taxes = subtotal * 0.1;
   const totalPrice = subtotal + taxes;
 
-  // Validation states for each section
+  // Validation states for each section - start as false, will be set on back navigation
   const [traveler1Validated, setTraveler1Validated] = useState(false);
   const [contactInfoValidated, setContactInfoValidated] = useState(false);
-  const [additionalTravelersValidated, setAdditionalTravelersValidated] = useState<boolean[]>(
-    Array.from({ length: Math.max(0, travelersCount - 1) }, () => false)
-  );
+  const [additionalTravelersValidated, setAdditionalTravelersValidated] = useState<boolean[]>([]);
+
+  // Track if this is a "back navigation" (data already exists on mount)
+  const isBackNavigation = useRef<boolean | null>(null);
+  const hasCheckedBackNav = useRef(false);
+
+  // Detect back navigation and set validation states ONCE when store hydrates
+  useEffect(() => {
+    // Only run once
+    if (hasCheckedBackNav.current) return;
+    
+    // Check if this looks like a back navigation (data already exists)
+    const t1 = travelers[0];
+    const t1Valid = t1 && isValidName(t1.name || "") && isValidName(t1.firstName || "") && isValidDate(t1.birthDate || "");
+    const phValid = 
+      policyholder.address.trim().length >= 5 &&
+      policyholder.city.trim().length >= 2 &&
+      isValidPostcode(policyholder.postcode) &&
+      isValidPhone(policyholder.phoneNumber) &&
+      isValidEmail(policyholder.email);
+    
+    // If any data exists, this is a back navigation
+    if (t1Valid || phValid || isPolicyholderTraveler !== null) {
+      hasCheckedBackNav.current = true;
+      isBackNavigation.current = true;
+      
+      // Set validation states based on existing data
+      if (t1Valid) {
+        setTraveler1Validated(true);
+      }
+      if (phValid) {
+        setContactInfoValidated(true);
+      }
+      
+      // Check additional travelers
+      const additionalValid = travelers.slice(1).map((t) => {
+        return isValidName(t.name || "") && isValidName(t.firstName || "") && isValidDate(t.birthDate || "");
+      });
+      if (additionalValid.length > 0) {
+        setAdditionalTravelersValidated(additionalValid);
+      }
+      
+      // After a short delay, allow future interactions to trigger scrolls
+      setTimeout(() => {
+        isBackNavigation.current = false;
+      }, 500);
+    } else if (isPolicyholderTraveler === null && !t1Valid && !phValid) {
+      // Zustand might not be hydrated yet, wait for next render
+      // Don't mark as checked yet
+    } else {
+      // Fresh visit
+      hasCheckedBackNav.current = true;
+      isBackNavigation.current = false;
+    }
+  }, [travelers, policyholder, isPolicyholderTraveler]);
 
   // Error states
   const [errors, setErrors] = useState<Record<string, string | null>>({});
@@ -260,7 +349,9 @@ export default function CheckoutPage() {
   const showLegalSection = showSection3 && contactInfoValidated && allAdditionalTravelersValidated;
 
   // Auto-scroll and focus (preventScroll to avoid browser auto-scroll override)
+  // Auto-scroll and focus - only if NOT back navigation
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (showSection2) {
       scrollToSection(section2Ref);
       setTimeout(() => traveler1NameRef.current?.focus({ preventScroll: true }), 200);
@@ -268,6 +359,7 @@ export default function CheckoutPage() {
   }, [showSection2]);
 
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (showSection3 && !contactInfoValidated) {
       scrollToSection(section3Ref);
       setTimeout(() => addressRef.current?.focus({ preventScroll: true }), 200);
@@ -275,6 +367,7 @@ export default function CheckoutPage() {
   }, [showSection3, contactInfoValidated]);
 
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (showLegalSection) {
       setTimeout(() => {
         scrollToElement(legalSectionRef.current);
@@ -502,7 +595,7 @@ export default function CheckoutPage() {
       />
 
       {/* Content */}
-      <div className="flex-1">
+      <div className="flex-1 pb-[120px]">
         {/* Title */}
         <div className="p-6">
           <h1 className="text-2xl font-bold leading-8 text-[#111B1D] text-center">
@@ -1009,22 +1102,25 @@ export default function CheckoutPage() {
       </div>
 
       {/* Sticky Footer */}
-      <div className="sticky bottom-0 bg-white border-t border-[#E5E5E5] px-6 py-4">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <p className="text-xs text-[#757575]">Total</p>
-            <p className="text-xl font-bold text-[#111B1D]">{formattedPrice}€</p>
-          </div>
-          <button
+      <div className="fixed bottom-0 left-0 right-0 bg-white px-6 py-4 flex items-center justify-between shadow-[0px_0px_4px_0px_rgba(0,0,0,0.2)]">
+        {/* Price Section */}
+        <div className="flex flex-col items-start">
+          <p className="text-sm leading-5 text-[#757575]">Total</p>
+          <p className="text-xl font-bold leading-7 text-[#111B1D]">
+            {formattedPrice} €
+          </p>
+          <button 
             type="button"
             onClick={() => setPriceBreakdownOpen(true)}
-            className="text-sm text-[#1F1F9C] underline"
+            className="text-sm font-semibold leading-6 text-[#1F1F9C] underline"
           >
             View price details
           </button>
         </div>
-        <Button fullWidth disabled={!isFormValid} onClick={handleSubmit}>
-          REVIEW ORDER
+
+        {/* Review Order Button */}
+        <Button disabled={!isFormValid} onClick={handleSubmit} className="w-[180px]">
+          Review order
         </Button>
       </div>
 

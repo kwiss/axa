@@ -180,6 +180,11 @@ export default function PlansPage() {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+  
+  const formattedPriceShort = selectedPlan.price.toLocaleString("fr-FR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   const handleBack = () => {
     router.back();
@@ -218,7 +223,7 @@ export default function PlansPage() {
       />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pb-[100px]">
         {/* Title */}
         <div className="flex flex-col items-center pt-6 pb-4 px-6">
           <h1 className="text-2xl font-bold leading-8 text-[#111B1D] text-center">
@@ -288,22 +293,25 @@ export default function PlansPage() {
             onItemClick={(coverageId) => setSelectedCoverageId(coverageId)}
           />
 
-          {/* CTA Section */}
-          <div className="flex flex-col gap-2 mt-6">
+          {/* View All Coverages Link */}
+          <div className="mt-6">
             <button
               type="button"
               onClick={() => setShowAllCoverages(!showAllCoverages)}
-              className="py-4 text-sm font-semibold uppercase tracking-[1px] text-[#1F1F9C] text-center hover:underline"
+              className="w-full py-4 text-sm font-semibold uppercase tracking-[1px] text-[#1F1F9C] text-center hover:underline"
             >
               {showAllCoverages ? "View less coverages" : "View all coverages"}
             </button>
-
-            <Button onClick={handleChoosePlan} fullWidth>
-              Choose {selectedPlan.name} {formattedPrice}€
-            </Button>
           </div>
         </div>
       </main>
+
+      {/* Sticky Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white px-6 py-4 shadow-[0px_0px_4px_0px_rgba(0,0,0,0.2)]">
+        <Button onClick={handleChoosePlan} fullWidth>
+          Choose {selectedPlan.name} {formattedPriceShort}€
+        </Button>
+      </div>
 
       {/* Help Modal */}
       <HelpModal isOpen={helpModalOpen} onClose={() => setHelpModalOpen(false)} />
