@@ -211,7 +211,7 @@ export default function AddOnsPage() {
       </main>
 
       {/* Sticky Footer */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white px-6 py-4 flex items-center justify-between shadow-[0px_0px_4px_0px_rgba(0,0,0,0.2)]">
+      <div className="fixed inset-x-0 bottom-0 z-50 bg-white px-6 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex items-center justify-between shadow-[0px_0px_4px_0px_rgba(0,0,0,0.2)]">
         {/* Price Section */}
         <div className="flex flex-col items-start w-[118px]">
           <p className="text-sm leading-5 text-[#757575]">Total</p>
