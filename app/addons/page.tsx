@@ -163,7 +163,7 @@ export default function AddOnsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F0F0] flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
       <Header
         variant="plans"
