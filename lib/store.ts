@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useShallow } from "zustand/shallow";
 
 // Types
 export type TripType = "solo" | "partner" | "family" | "abroad" | "student";
@@ -207,9 +208,11 @@ export const useTravelersCount = () =>
   useFunnelStore((state) => state.travelers.length);
 
 export const useTripSummary = () =>
-  useFunnelStore((state) => ({
-    destination: state.destination,
-    startDate: state.dates?.start,
-    endDate: state.dates?.end,
-    travelers: state.travelers.length,
-  }));
+  useFunnelStore(
+    useShallow((state) => ({
+      destination: state.destination,
+      startDate: state.dates?.start,
+      endDate: state.dates?.end,
+      travelers: state.travelers.length,
+    }))
+  );

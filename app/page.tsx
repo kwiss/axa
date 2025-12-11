@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Phone, ChevronRight } from "lucide-react";
@@ -18,7 +18,13 @@ const tripTypes: { id: TripType; label: string }[] = [
 
 export default function Home() {
   const router = useRouter();
-  const { tripType: selectedTripType, setTripType } = useFunnelStore();
+  const { tripType: selectedTripType, setTripType, reset } = useFunnelStore();
+  
+  // Reset the entire funnel state when arriving on Home page
+  // This ensures a fresh start when user navigates back
+  useEffect(() => {
+    reset();
+  }, [reset]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const selectedTrip = tripTypes.find(t => t.id === selectedTripType);

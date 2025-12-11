@@ -44,6 +44,31 @@ export default function FormPage() {
   const [isDestinationPickerOpen, setIsDestinationPickerOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
+  // Track if this is a "back navigation" (data already exists on mount)
+  // null = not yet determined, true = back nav (don't scroll), false = fresh visit (scroll OK)
+  const isBackNavigation = useRef<boolean | null>(null);
+  const hasCheckedBackNav = useRef(false);
+  
+  // Detect back navigation after Zustand hydration
+  // This effect runs when insuranceType changes (including after hydration from localStorage)
+  useEffect(() => {
+    if (!hasCheckedBackNav.current && insuranceType !== null) {
+      // Data already exists = back navigation
+      hasCheckedBackNav.current = true;
+      isBackNavigation.current = true;
+      // Scroll to top since user is coming back to edit
+      window.scrollTo({ top: 0, behavior: "instant" });
+      // After a short delay, allow future interactions to trigger scrolls
+      setTimeout(() => {
+        isBackNavigation.current = false;
+      }, 500);
+    } else if (!hasCheckedBackNav.current && insuranceType === null) {
+      // First check and no data = fresh visit
+      hasCheckedBackNav.current = true;
+      isBackNavigation.current = false;
+    }
+  }, [insuranceType]);
+
   // Validation states - triggered by blur or Enter (no more timeouts!)
   // Initialize based on existing store values (for back navigation)
   const [tripCostValidated, setTripCostValidated] = useState(
@@ -106,13 +131,17 @@ export default function FormPage() {
     hasPromoCode !== null;
 
   // Auto-scroll effects - scroll when section becomes visible
+  // Only scroll if NOT a back navigation (first time filling the form)
+  // Also skip if not yet determined (null)
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (showSection2 && insuranceType !== null) {
       scrollToSection(section2Ref);
     }
   }, [insuranceType, showSection2]);
 
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (needsCancellation === true) {
       scrollToSection(section3Ref);
       // Focus trip cost input (with delay to let scroll finish)
@@ -124,6 +153,7 @@ export default function FormPage() {
 
   // Scroll to destination when trip cost is validated
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (showSection4 && tripCostValidated) {
       scrollToSection(section4Ref);
       setTimeout(() => destinationButtonRef.current?.focus({ preventScroll: true }), 250);
@@ -131,6 +161,7 @@ export default function FormPage() {
   }, [tripCostValidated, showSection4]);
 
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (showSection5 && destination !== null) {
       scrollToSection(section5Ref);
       setTimeout(() => datesButtonRef.current?.focus({ preventScroll: true }), 250);
@@ -138,6 +169,7 @@ export default function FormPage() {
   }, [destination, showSection5]);
 
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (showSection6 && dates !== null) {
       scrollToSection(section6Ref);
       // Focus traveler age input (with delay to let scroll finish)
@@ -147,6 +179,7 @@ export default function FormPage() {
 
   // Scroll to promo code when traveler age is validated
   useEffect(() => {
+    if (isBackNavigation.current !== false) return;
     if (showSection7 && travelerAgeValidated) {
       scrollToSection(section7Ref);
     }
