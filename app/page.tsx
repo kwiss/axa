@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { Phone, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useFunnelStore, type TripType } from "@/lib/store";
 
-const tripTypes = [
+const tripTypes: { id: TripType; label: string }[] = [
   { id: "solo", label: "Solo trip" },
   { id: "partner", label: "Partner trip" },
   { id: "family", label: "Family trip" },
@@ -16,13 +17,13 @@ const tripTypes = [
 
 export default function Home() {
   const router = useRouter();
-  const [selectedTripType, setSelectedTripType] = useState<string | null>(null);
+  const { tripType: selectedTripType, setTripType } = useFunnelStore();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const selectedTrip = tripTypes.find(t => t.id === selectedTripType);
 
-  const handleSelectTrip = (tripId: string) => {
-    setSelectedTripType(tripId);
+  const handleSelectTrip = (tripId: TripType) => {
+    setTripType(tripId);
     setIsDrawerOpen(false);
   };
 

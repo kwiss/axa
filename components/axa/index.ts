@@ -10,6 +10,7 @@ export { SelectField } from "./SelectField";
 export { RecapSection } from "./RecapSection";
 export { DateSelector } from "./DateSelector";
 export { AddOnCard } from "./AddOnCard";
+export { AddOnCardV2 } from "./AddOnCardV2";
 export { InfoTooltip } from "./InfoTooltip";
 export { YesNoButtons } from "./YesNoButtons";
 export { ReinsuranceBlock } from "./ReinsuranceBlock";
@@ -25,4 +26,11 @@ export { CoverageItem } from "./CoverageItem";
 export { CoverageList } from "./CoverageList";
 export { CoverageDetailDrawer } from "./CoverageDetailDrawer";
 export { HelpModal } from "./HelpModal";
+export { StratisIcon } from "./StratisIcon";
+export { SaveQuoteDrawer } from "./SaveQuoteDrawer";
+export { PriceBreakdownDrawer } from "./PriceBreakdownDrawer";
 
+// Checkout components
+export { OrderSummaryCard } from "./OrderSummaryCard";
+export { CreditCardDrawer } from "./CreditCardDrawer";
+export { InstallmentDrawer } from "./InstallmentDrawer";

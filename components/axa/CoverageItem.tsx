@@ -62,9 +62,9 @@ export function CoverageItem({
         </p>
 
         {included ? (
-          <CheckCircle className="size-6 text-[#138636] shrink-0" />
+          <CheckCircle className="size-5 text-[#138636] shrink-0" />
         ) : (
-          <XCircle className="size-6 text-[#999999] shrink-0" />
+          <XCircle className="size-5 text-[#999999] shrink-0" />
         )}
       </div>
     );
@@ -87,7 +87,7 @@ export function CoverageItem({
       {IconComponent && (
         <IconComponent
           className={cn(
-            "size-6 shrink-0 mt-0.5",
+            "size-5 shrink-0 mt-0.5",
             included ? "text-[#111B1D]" : "text-[#999999]"
           )}
         />
@@ -117,7 +117,7 @@ export function CoverageItem({
 
       {/* Chevron or Status Icon */}
       {expandable ? (
-        <ChevronRight className="size-6 text-[#343C3D] shrink-0" />
+        <ChevronRight className="size-5 text-[#343C3D] shrink-0" />
       ) : null}
     </button>
   );

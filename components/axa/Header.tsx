@@ -49,7 +49,7 @@ export function Header({
             {showHelp && (
               <button
                 onClick={handleHelpClick}
-                className="bg-[#00008F] rounded-full h-8 px-1.5 flex items-center gap-1 hover:bg-[#1F1F9C] transition-colors"
+                className="bg-[#00008F] rounded-full h-8 px-2.5 flex items-center gap-1 hover:bg-[#1F1F9C] transition-colors"
               >
                 <Info className="size-4 text-white" />
                 <span className="text-xs text-white pr-1">Help</span>

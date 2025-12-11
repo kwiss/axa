@@ -12,18 +12,12 @@ import {
   CoverageList,
   CoverageDetailDrawer,
   HelpModal,
+  SaveQuoteDrawer,
 } from "@/components/axa";
 import type { Plan } from "@/components/axa/PlanCarousel";
 import type { Coverage } from "@/components/axa/CoverageList";
 import type { CoverageDetail } from "@/components/axa/CoverageDetailDrawer";
-
-// Mock data - in real app, this would come from the form state or API
-const MOCK_TRIP_DATA = {
-  destination: "UK - Italy",
-  startDate: "14/11/2025",
-  endDate: "22/11/2025",
-  travelers: 2,
-};
+import { useFunnelStore, useTripSummary, type PlanId } from "@/lib/store";
 
 // Plans data with coverages
 const PLANS_DATA: (Plan & { coverages: Coverage[] })[] = [
@@ -34,10 +28,10 @@ const PLANS_DATA: (Plan & { coverages: Coverage[] })[] = [
     isRecommended: false,
     coverages: [
       { id: "trip-interruption", label: "Trip Interruption", amount: "2,500 €", included: true },
-      { id: "medical-expenses", label: "Emergency Medical Expenses", amount: "50,000 €", included: true },
-      { id: "evacuation", label: "Emergency Evacuation", amount: "100,000 €", included: true },
+      { id: "medical-expenses", label: "Emmergency Medical Expenses", amount: "100,000 €", included: true },
+      { id: "evacuation", label: "Emergency Evacuation", amount: "250,000 €", included: true },
+      { id: "political-evacuation", label: "Political and Natural Disaster Evacuation", amount: "150,000 €", included: false },
       { id: "trip-delay", label: "Trip Delay", included: false },
-      { id: "political-evacuation", label: "Political and Natural Disaster Evacuation", included: false },
     ],
   },
   {
@@ -47,7 +41,7 @@ const PLANS_DATA: (Plan & { coverages: Coverage[] })[] = [
     isRecommended: true,
     coverages: [
       { id: "trip-interruption", label: "Trip Interruption", amount: "2,500 €", included: true },
-      { id: "medical-expenses", label: "Emergency Medical Expenses", amount: "100,000 €", included: true },
+      { id: "medical-expenses", label: "Emmergency Medical Expenses", amount: "100,000 €", included: true },
       { id: "evacuation", label: "Emergency Evacuation", amount: "250,000 €", included: true },
       { id: "political-evacuation", label: "Political and Natural Disaster Evacuation", amount: "150,000 €", included: true },
       { id: "trip-delay", label: "Trip Delay", included: false },
@@ -59,11 +53,11 @@ const PLANS_DATA: (Plan & { coverages: Coverage[] })[] = [
     price: 86.23,
     isRecommended: false,
     coverages: [
-      { id: "trip-interruption", label: "Trip Interruption", amount: "5,000 €", included: true },
-      { id: "medical-expenses", label: "Emergency Medical Expenses", amount: "150,000 €", included: true },
-      { id: "evacuation", label: "Emergency Evacuation", amount: "500,000 €", included: true },
-      { id: "political-evacuation", label: "Political and Natural Disaster Evacuation", amount: "250,000 €", included: true },
-      { id: "trip-delay", label: "Trip Delay", amount: "500 €", included: true },
+      { id: "trip-interruption", label: "Trip Interruption", amount: "2,500 €", included: true },
+      { id: "medical-expenses", label: "Emmergency Medical Expenses", amount: "100,000 €", included: true },
+      { id: "evacuation", label: "Emergency Evacuation", amount: "250,000 €", included: true },
+      { id: "political-evacuation", label: "Political and Natural Disaster Evacuation", amount: "150,000 €", included: true },
+      { id: "trip-delay", label: "Trip Delay", included: true },
     ],
   },
 ];
@@ -167,10 +161,16 @@ const COVERAGE_DETAILS: Record<string, CoverageDetailInfo> = {
 
 export default function PlansPage() {
   const router = useRouter();
-  const [selectedPlanId, setSelectedPlanId] = useState("essential");
+  
+  // Use Zustand store
+  const { selectedPlanId, setSelectedPlanId } = useFunnelStore();
+  const tripSummary = useTripSummary();
+  const travelersCount = tripSummary.travelers;
+  
   const [showAllCoverages, setShowAllCoverages] = useState(false);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [selectedCoverageId, setSelectedCoverageId] = useState<string | null>(null);
+  const [saveQuoteOpen, setSaveQuoteOpen] = useState(false);
 
   const selectedPlan = PLANS_DATA.find((p) => p.id === selectedPlanId) || PLANS_DATA[1];
   const selectedCoverageDetail = selectedCoverageId ? COVERAGE_DETAILS[selectedCoverageId] : null;
@@ -190,8 +190,11 @@ export default function PlansPage() {
   };
 
   const handleChoosePlan = () => {
-    // Navigate to checkout with selected plan
-    router.push(`/checkout?plan=${selectedPlanId}`);
+    router.push("/addons");
+  };
+  
+  const handleSelectPlan = (planId: string) => {
+    setSelectedPlanId(planId as PlanId);
   };
 
   return (
@@ -207,10 +210,10 @@ export default function PlansPage() {
 
       {/* Trip Summary Bar */}
       <TripSummaryBar
-        destination={MOCK_TRIP_DATA.destination}
-        startDate={MOCK_TRIP_DATA.startDate}
-        endDate={MOCK_TRIP_DATA.endDate}
-        travelers={MOCK_TRIP_DATA.travelers}
+        destination={tripSummary.destination || "Not selected"}
+        startDate={tripSummary.startDate || ""}
+        endDate={tripSummary.endDate || ""}
+        travelers={travelersCount}
         onEdit={handleEditTrip}
       />
 
@@ -227,7 +230,7 @@ export default function PlansPage() {
         <PlanCarousel
           plans={PLANS_DATA}
           selectedPlanId={selectedPlanId}
-          onSelectPlan={setSelectedPlanId}
+          onSelectPlan={handleSelectPlan}
           options={{ align: "center", containScroll: false }}
         />
 
@@ -250,6 +253,7 @@ export default function PlansPage() {
             {/* Email Quote Button */}
             <button
               type="button"
+              onClick={() => setSaveQuoteOpen(true)}
               className="size-[42px] rounded-full bg-[#F0F0F0] flex items-center justify-center hover:bg-[#E5E5E5] transition-colors"
               aria-label="Email quote"
             >
@@ -257,8 +261,8 @@ export default function PlansPage() {
             </button>
           </div>
 
-          {/* Divider */}
-          <div className="h-px bg-[#E5E5E5] mb-6" />
+          {/* Divider - only show when not expanded */}
+          {!showAllCoverages && <div className="h-px bg-[#E5E5E5] mb-6" />}
 
           {/* Coverage Summary */}
           {!showAllCoverages && (
@@ -286,10 +290,6 @@ export default function PlansPage() {
 
           {/* CTA Section */}
           <div className="flex flex-col gap-2 mt-6">
-            <Button onClick={handleChoosePlan} fullWidth>
-              Choose {selectedPlan.name} {formattedPrice}€
-            </Button>
-
             <button
               type="button"
               onClick={() => setShowAllCoverages(!showAllCoverages)}
@@ -297,6 +297,10 @@ export default function PlansPage() {
             >
               {showAllCoverages ? "View less coverages" : "View all coverages"}
             </button>
+
+            <Button onClick={handleChoosePlan} fullWidth>
+              Choose {selectedPlan.name} {formattedPrice}€
+            </Button>
           </div>
         </div>
       </main>
@@ -314,6 +318,12 @@ export default function PlansPage() {
           details={selectedCoverageDetail.details}
         />
       )}
+
+      {/* Save Quote Drawer */}
+      <SaveQuoteDrawer
+        isOpen={saveQuoteOpen}
+        onClose={() => setSaveQuoteOpen(false)}
+      />
     </div>
   );
 }

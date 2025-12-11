@@ -36,9 +36,10 @@ type UseDotButtonType = {
 };
 
 const useDotButton = (
-  emblaApi: EmblaCarouselType | undefined
+  emblaApi: EmblaCarouselType | undefined,
+  initialIndex: number = 0
 ): UseDotButtonType => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(initialIndex);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
   const onDotButtonClick = useCallback(
@@ -83,17 +84,24 @@ export function PlanCarousel({
   options,
   className,
 }: PlanCarouselProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel(options);
+  // Get the initial index from options or find it from selectedPlanId
+  const initialIndex = options?.startIndex ?? plans.findIndex((p) => p.id === selectedPlanId);
+  
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    ...options,
+    startIndex: initialIndex >= 0 ? initialIndex : 0,
+  });
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi);
+    useDotButton(emblaApi, initialIndex >= 0 ? initialIndex : 0);
 
-  // Sync parent state when selection changes
+  // Sync parent state when carousel selection changes
   useEffect(() => {
-    if (plans[selectedIndex]) {
-      onSelectPlan(plans[selectedIndex].id);
+    const currentPlan = plans[selectedIndex];
+    if (currentPlan && currentPlan.id !== selectedPlanId) {
+      onSelectPlan(currentPlan.id);
     }
-  }, [selectedIndex, plans, onSelectPlan]);
+  }, [selectedIndex, plans, selectedPlanId, onSelectPlan]);
 
   // Handle click on a card
   const handleCardClick = (index: number) => {
