@@ -246,7 +246,6 @@ export default function AddOnsPage() {
         options={selectedAddOnItems}
         taxes={taxes}
         totalPrice={totalPrice}
-        travelersCount={travelersCount}
         onEditPlan={() => {
           setPriceBreakdownOpen(false);
           router.push("/plans");

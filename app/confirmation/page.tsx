@@ -1,8 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
+import Image from "next/image";
 import { Phone, MessageCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/axa";
+import { useFunnelStore } from "@/lib/store";
 
 // Team avatars - real human photos
 const TEAM_AVATARS = [
@@ -11,10 +14,46 @@ const TEAM_AVATARS = [
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
 ];
 
-// Italy landscape background for the policy card
-const ITALY_BACKGROUND = "https://images.unsplash.com/photo-1534445867742-43195f401b6c?w=800&q=80";
+// Destination background images mapping
+const DESTINATION_BACKGROUNDS: Record<string, string> = {
+  "Europe": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80",
+  "North America": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=800&q=80",
+  "South America": "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=800&q=80",
+  "Asia": "https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800&q=80",
+  "Africa": "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=80",
+  "Oceania": "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=800&q=80",
+  "Worldwide": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+};
+
+// Default background
+const DEFAULT_BACKGROUND = "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800&q=80";
+
+// Generate a fake policy number
+const generatePolicyNumber = (): string => {
+  const segments = [
+    Math.floor(Math.random() * 900 + 100).toString(),
+    Math.floor(Math.random() * 900 + 100).toString(),
+    Math.floor(Math.random() * 9000 + 1000).toString(),
+    Math.floor(Math.random() * 90 + 10).toString(),
+  ];
+  return segments.join(" ");
+};
 
 export default function ConfirmationPage() {
+  // Use Zustand store
+  const { destination } = useFunnelStore();
+  
+  // Generate policy number once
+  const policyNumber = useMemo(() => generatePolicyNumber(), []);
+  
+  // Get background image based on destination
+  const backgroundImage = destination 
+    ? (DESTINATION_BACKGROUNDS[destination] || DEFAULT_BACKGROUND)
+    : DEFAULT_BACKGROUND;
+  
+  // Display destination name (or fallback)
+  const displayDestination = destination || "your destination";
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header - Same as Home page style */}
@@ -35,21 +74,23 @@ export default function ConfirmationPage() {
         {/* Congratulations Section */}
         <div className="flex flex-col gap-6 items-center text-center">
           <h1 className="text-2xl font-bold leading-8 text-[#111B1D]">
-            Congratulations! Your trip to Italy is now protected!
+            Congratulations! Your trip to {displayDestination} is now protected!
           </h1>
           <p className="text-base leading-6 text-[#111B1D]">
-            Your travel insurance has been successfully activated. We've sent your travel insurance details to your email.
+            Your travel insurance has been successfully activated. We&apos;ve sent your travel insurance details to your email.
           </p>
         </div>
 
-        {/* Policy Card with Italy Background */}
+        {/* Policy Card with Destination Background */}
         <div className="relative rounded-md overflow-hidden">
           {/* Background Image with Overlay */}
           <div className="absolute inset-0">
-            <img 
-              src={ITALY_BACKGROUND}
-              alt="Italian landscape"
-              className="size-full object-cover"
+            <Image 
+              src={backgroundImage}
+              alt={`${displayDestination} landscape`}
+              fill
+              className="object-cover"
+              unoptimized
             />
             <div className="absolute inset-0 bg-black/20" />
           </div>
@@ -57,7 +98,7 @@ export default function ConfirmationPage() {
           {/* Content */}
           <div className="relative z-10 p-4 flex flex-col gap-5">
             <h2 className="text-xl font-bold leading-7 text-white">
-              Enjoy your trip to Italy
+              Enjoy your trip to {displayDestination}
             </h2>
 
             <div className="flex flex-col gap-2.5 backdrop-blur-[10px]">
@@ -65,7 +106,7 @@ export default function ConfirmationPage() {
                 Your policy number
               </p>
               <p className="text-2xl font-bold leading-8 text-white">
-                098 766 5545 33
+                {policyNumber}
               </p>
             </div>
 
@@ -88,13 +129,15 @@ export default function ConfirmationPage() {
               {TEAM_AVATARS.map((avatar, index) => (
                 <div 
                   key={index}
-                  className="size-7 rounded-full border-2 border-white overflow-hidden"
+                  className="size-7 rounded-full border-2 border-white overflow-hidden relative"
                   style={{ zIndex: TEAM_AVATARS.length - index }}
                 >
-                  <img 
+                  <Image 
                     src={avatar}
                     alt={`Team member ${index + 1}`}
-                    className="size-full object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
                 </div>
               ))}

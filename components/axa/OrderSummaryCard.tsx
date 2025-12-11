@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Pencil, Plus } from "lucide-react";
 
 // Destination images mapping (same as DestinationPicker)
@@ -90,11 +91,13 @@ export function OrderSummaryCard({
       <div className="bg-[#E8F1FF] p-5 relative">
         <div className="flex gap-5">
           {/* Destination Image */}
-          <div className="size-[76px] rounded-md overflow-hidden flex-shrink-0">
-            <img
+          <div className="size-[76px] rounded-md overflow-hidden flex-shrink-0 relative">
+            <Image
               src={getDestinationImage(destination)}
               alt={destination}
-              className="size-full object-cover"
+              fill
+              className="object-cover"
+              unoptimized
             />
           </div>
 

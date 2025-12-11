@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { X, Search } from "lucide-react";
 
@@ -111,11 +112,13 @@ export function DestinationPicker({
                 )}
               >
                 {/* Country Image */}
-                <div className="size-10 rounded overflow-hidden bg-[#D9D9D9] flex-shrink-0">
-                  <img
+                <div className="size-10 rounded overflow-hidden bg-[#D9D9D9] flex-shrink-0 relative">
+                  <Image
                     src={dest.image}
                     alt={dest.name}
-                    className="size-full object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
                 </div>
 
@@ -134,7 +137,7 @@ export function DestinationPicker({
 
           {filteredDestinations.length === 0 && (
             <p className="text-center text-[#757575] py-8">
-              No destinations found for "{searchQuery}"
+              No destinations found for &quot;{searchQuery}&quot;
             </p>
           )}
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface SelectableCardProps {
@@ -34,7 +35,7 @@ export function SelectableCard({
     >
       {/* Icon/Image - 40x40px, rounded 4px */}
       <div className={cn(
-        "size-10 rounded flex items-center justify-center flex-shrink-0",
+        "size-10 rounded flex items-center justify-center flex-shrink-0 relative overflow-hidden",
         isSelected ? "bg-[#94B5E8]" : "bg-[#D9D9D9]"
       )}>
         {icon && (
@@ -45,7 +46,7 @@ export function SelectableCard({
           </span>
         )}
         {image && (
-          <img src={image} alt="" className="size-full object-cover rounded" />
+          <Image src={image} alt="" fill className="object-cover rounded" unoptimized />
         )}
       </div>
       

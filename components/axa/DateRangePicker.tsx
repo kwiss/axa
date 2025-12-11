@@ -231,7 +231,7 @@ export function DateRangePicker({
         )}
 
         {/* Day cells */}
-        {week.map((day, dayIndex) => {
+        {week.map((day) => {
           const isStart = startDate && isSameDay(day.date, startDate);
           const isEnd = endDate && isSameDay(day.date, endDate);
           const inRange = isInRange(day.date, startDate, endDate);

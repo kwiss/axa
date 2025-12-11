@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { X, Phone, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -72,14 +73,16 @@ export function HelpModal({ isOpen, onClose, className }: HelpModalProps) {
                 <div
                   key={index}
                   className={cn(
-                    "size-[58px] rounded-full border-2 border-white overflow-hidden",
+                    "size-[58px] rounded-full border-2 border-white overflow-hidden relative",
                     index === 1 && "z-10"
                   )}
                 >
-                  <img
+                  <Image
                     src={avatar}
                     alt={`Team member ${index + 1}`}
-                    className="size-full object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
                 </div>
               ))}

@@ -17,7 +17,6 @@ interface CoverageListProps {
   includedItems: Coverage[];
   excludedItems: Coverage[];
   expanded?: boolean;
-  onToggleExpand?: () => void;
   onItemClick?: (coverageId: string) => void;
   className?: string;
 }
@@ -26,7 +25,6 @@ export function CoverageList({
   includedItems,
   excludedItems,
   expanded = false,
-  onToggleExpand,
   onItemClick,
   className,
 }: CoverageListProps) {

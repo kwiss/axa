@@ -62,7 +62,7 @@ export function SaveQuoteDrawer({
 
           {/* Description */}
           <p className="text-base leading-6 text-[#111B1D] mb-8">
-            No problem! We'll save your quote so you can easily complete it later.
+            No problem! We&apos;ll save your quote so you can easily complete it later.
           </p>
 
           {/* Phone Field */}

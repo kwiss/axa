@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface InfoTooltipProps {
@@ -22,16 +23,14 @@ export function InfoTooltip({
       className
     )}>
       {/* Avatar */}
-      <div className="size-[30px] rounded-full bg-[#94B5E8] flex-shrink-0 overflow-hidden">
+      <div className="size-[30px] rounded-full bg-[#94B5E8] flex-shrink-0 overflow-hidden relative">
         {avatarSrc && (
-          <img 
+          <Image 
             src={avatarSrc} 
             alt="" 
-            className="size-full object-cover"
-            onError={(e) => {
-              // Hide image on error
-              (e.target as HTMLImageElement).style.display = 'none';
-            }}
+            fill
+            className="object-cover"
+            unoptimized
           />
         )}
       </div>

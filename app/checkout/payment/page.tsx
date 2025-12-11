@@ -138,8 +138,7 @@ export default function CheckoutPaymentPage() {
     // Close drawers and redirect to confirmation
     setCreditCardDrawerOpen(false);
     setInstallmentDrawerOpen(false);
-    // TODO: Redirect to confirmation page when available
-    alert("Payment successful! Confirmation page coming soon.");
+    router.push("/confirmation");
   };
 
   return (

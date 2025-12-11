@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Phone, X, MessageCircle } from "lucide-react";
 import {
   Sheet,
@@ -66,10 +67,12 @@ export function HelpDrawer({ open, onOpenChange }: HelpDrawerProps) {
                   className="relative shrink-0 size-[58px]"
                   style={{ marginRight: index < avatars.length - 1 ? "-12px" : 0 }}
                 >
-                  <img
+                  <Image
                     src={avatar}
                     alt={`Team member ${index + 1}`}
-                    className="size-full rounded-full object-cover border-2 border-white"
+                    fill
+                    className="rounded-full object-cover border-2 border-white"
+                    unoptimized
                   />
                 </div>
               ))}

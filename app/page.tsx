@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Phone, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -80,10 +81,12 @@ export default function Home() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[#5f5f5f]" />
-          <img 
+          <Image 
             src="/hero.jpg" 
             alt="Travelers hiking in mountains"
-            className="absolute inset-0 size-full object-cover"
+            fill
+            className="object-cover"
+            priority
           />
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-black/50" />
@@ -94,7 +97,7 @@ export default function Home() {
           {/* Main Title - Publico Headline Bold 32px, NOT italic */}
           <h1 className="font-headline text-[32px] font-bold leading-8 text-white">
             Wherever you go,<br />
-            we're already there.
+            we&apos;re already there.
           </h1>
 
           {/* Subtitle - Source Sans Pro Regular 20px, leading-28 */}

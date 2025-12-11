@@ -347,7 +347,7 @@ export default function CheckoutPage() {
 
   const handleSubmit = () => {
     if (isFormValid) {
-      router.push("/payment");
+      router.push("/checkout/summary");
     }
   };
 
@@ -1024,7 +1024,7 @@ export default function CheckoutPage() {
           </button>
         </div>
         <Button fullWidth disabled={!isFormValid} onClick={handleSubmit}>
-          CONTINUE TO PAYMENT
+          REVIEW ORDER
         </Button>
       </div>
 
@@ -1041,7 +1041,6 @@ export default function CheckoutPage() {
         options={addOnsItems}
         taxes={taxes}
         totalPrice={totalPrice}
-        travelersCount={travelersCount}
         onEditPlan={() => router.push("/plans")}
         onEditOptions={() => router.push("/addons")}
       />

@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 interface DateSelectorProps {
   label: string;
   value?: Date;
-  onChange?: (date: Date) => void;
   placeholder?: string;
   className?: string;
 }
@@ -15,7 +14,6 @@ interface DateSelectorProps {
 export function DateSelector({
   label,
   value,
-  onChange,
   placeholder = "Select date",
   className,
 }: DateSelectorProps) {

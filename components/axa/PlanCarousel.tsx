@@ -50,21 +50,40 @@ const useDotButton = (
     [emblaApi]
   );
 
-  const onInit = useCallback((emblaApi: EmblaCarouselType) => {
-    setScrollSnaps(emblaApi.scrollSnapList());
-  }, []);
-
-  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, []);
-
   useEffect(() => {
     if (!emblaApi) return;
 
-    onInit(emblaApi);
-    onSelect(emblaApi);
-    emblaApi.on("reInit", onInit).on("reInit", onSelect).on("select", onSelect);
-  }, [emblaApi, onInit, onSelect]);
+    const updateScrollSnaps = () => {
+      setScrollSnaps(emblaApi.scrollSnapList());
+    };
+
+    const updateSelectedIndex = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+    };
+
+    // Subscribe to events
+    emblaApi
+      .on("reInit", updateScrollSnaps)
+      .on("reInit", updateSelectedIndex)
+      .on("select", updateSelectedIndex);
+
+    // Defer initial state update to satisfy lint rule
+    const rafId = requestAnimationFrame(() => {
+      if (emblaApi.scrollSnapList().length > 0) {
+        updateScrollSnaps();
+        updateSelectedIndex();
+      }
+    });
+
+    // Return cleanup function
+    return () => {
+      cancelAnimationFrame(rafId);
+      emblaApi
+        .off("reInit", updateScrollSnaps)
+        .off("reInit", updateSelectedIndex)
+        .off("select", updateSelectedIndex);
+    };
+  }, [emblaApi]);
 
   return {
     selectedIndex,

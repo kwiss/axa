@@ -19,7 +19,6 @@ interface PriceBreakdownDrawerProps {
   options: PriceItem[];
   taxes: number;
   totalPrice: number;
-  travelersCount: number;
   onEditPlan?: () => void;
   onEditOptions?: () => void;
 }
@@ -33,7 +32,6 @@ export function PriceBreakdownDrawer({
   options,
   taxes,
   totalPrice,
-  travelersCount,
   onEditPlan,
   onEditOptions,
 }: PriceBreakdownDrawerProps) {
