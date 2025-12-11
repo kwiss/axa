@@ -289,7 +289,6 @@ export default function PlansPage() {
             includedItems={EXTENDED_COVERAGES.included}
             excludedItems={EXTENDED_COVERAGES.excluded}
             expanded={showAllCoverages}
-            onToggleExpand={() => setShowAllCoverages(false)}
             onItemClick={(coverageId) => setSelectedCoverageId(coverageId)}
           />
 
